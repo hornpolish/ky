@@ -1,0 +1,6 @@
+---
+this: yaml
+has:
+  - and: stuff
+  - nested: keys
+for: grins
