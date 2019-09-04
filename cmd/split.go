@@ -13,6 +13,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// splitVar is the global struct for the split command
+var splitVar struct {
+	outdir string
+	nest   bool
+}
+
 // splitCmd represents the split command
 var splitCmd = &cobra.Command{
 	Use:   "split",
@@ -32,6 +38,8 @@ var splitCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(splitCmd)
+	splitCmd.Flags().StringVarP(&splitVar.outdir, "outdir", "o", "./gensplit", "Directory to generate into")
+	splitCmd.Flags().BoolVarP(&splitVar.nest, "nest", "n", false, "Nested Directory per name?")
 }
 
 func check(e error) {
@@ -39,8 +47,6 @@ func check(e error) {
 		panic(e)
 	}
 }
-
-const outdir = "generated/"
 
 // KubernetesAPI is for unmarshaling objects
 type KubernetesAPI struct {
@@ -57,35 +63,43 @@ type KubernetesAPI struct {
 // Split takes
 func Split(args []string) error {
 
-	log.Println("Hello from Split", args[0])
-
 	files := readAndSplitFile(args[0])
 
-	os.Mkdir(outdir, os.ModePerm)
+	// TODO - error if directory exists, not empty
+	os.Mkdir(splitVar.outdir, os.ModePerm)
 
 	for key, value := range files {
 
 		var m KubernetesAPI
+		var filename string
 
 		err := yaml.Unmarshal([]byte(value), &m)
 		check(err)
 
 		if m.Kind == "" {
 			fmt.Println("yaml file with no kind")
-		} else {
-
-			fmt.Println("File: ", key, m.Kind)
-
-			filename := outdir + m.Metadata.Name + "-" + m.Kind + ".yaml"
-			fmt.Println(filename)
-
-			f, err := os.Create(filename)
-			check(err)
-			defer f.Close()
-
-			_, err = f.WriteString(value)
-			check(err)
+			return nil
 		}
+
+		fmt.Println("File: ", key, m.Kind)
+
+		if splitVar.nest == true {
+			dirname := splitVar.outdir + "/" + m.Metadata.Name
+			os.Mkdir(dirname, os.ModePerm)
+
+			filename = dirname + "/" + m.Kind + ".yaml"
+		} else {
+			filename = splitVar.outdir + m.Metadata.Name + "-" + m.Kind + ".yaml"
+		}
+
+		fmt.Println(filename)
+
+		f, err := os.Create(filename)
+		check(err)
+		defer f.Close()
+
+		_, err = f.WriteString("---\n" + value)
+		check(err)
 	}
 
 	return nil
@@ -110,8 +124,8 @@ func readAndSplitFile(logfile string) map[int]string {
 			}
 			log.Panicf("read file line error: %v", err)
 		}
-		prettyline := strings.TrimSpace(line)
-		if prettyline == "---" {
+
+		if strings.TrimSpace(line) == "---" {
 			count++
 		} else {
 			c[count] += line
