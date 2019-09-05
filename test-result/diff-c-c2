@@ -1,0 +1,3 @@
+../test/c.yaml(+) ../test/c2.yaml(-)
+- and: "Easter",
++ and: "MessedOrder",

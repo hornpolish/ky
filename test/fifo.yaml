@@ -1,0 +1,174 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    sas.com/duname: filesservice
+    sas.com/version: 2.10.1
+  labels:
+    app.kubernetes.io/name: files
+    helm.sh/chart: files-2.10.1
+  name: files
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: files
+  template:
+    metadata:
+      labels:
+        app: files
+        app.kubernetes.io/name: files
+    spec:
+      containers:
+      - env:
+        - name: SAS_URL_SERVICE_TEMPLATE
+          value: http://va40.itviya-dev0.sas.com
+        envFrom:
+        - configMapRef:
+            name: convoy-shared-config
+        - configMapRef:
+            name: convoy-java-config
+        image: repulpmaster.unx.sas.com/va-125.0.0-x64_redhat_linux_7-docker-testready/sas-files:2.10.1-20190817.1566003978971
+        imagePullPolicy: IfNotPresent
+        name: files
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: convoy-shared-config
+        image: docker.sas.com/dapage/init-blocker:1.6
+        name: init-blocker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/duname: filesservice
+    sas.com/version: 2.10.1
+  labels:
+    app.kubernetes.io/name: files
+    helm.sh/chart: files-2.10.1
+  name: files
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: files
+  type: ClusterIP
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/duname: filesservice
+    sas.com/version: 2.10.1
+  name: files
+spec:
+  gateways:
+  - convoy-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /files
+    - uri:
+        prefix: /files/
+    route:
+    - destination:
+        host: files.va40.svc.cluster.local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    sas.com/duname: foldersrvc
+    sas.com/version: 2.16.0
+  labels:
+    app.kubernetes.io/name: folders
+    helm.sh/chart: folders-2.16.0
+  name: folders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: folders
+  template:
+    metadata:
+      labels:
+        app: folders
+        app.kubernetes.io/name: folders
+    spec:
+      containers:
+      - env:
+        - name: SAS_URL_SERVICE_TEMPLATE
+          value: http://va40.itviya-dev0.sas.com
+        envFrom:
+        - configMapRef:
+            name: convoy-shared-config
+        - configMapRef:
+            name: convoy-java-config
+        image: repulpmaster.unx.sas.com/va-125.0.0-x64_redhat_linux_7-docker-testready/sas-folders:2.16.0-20190817.1566004441696
+        imagePullPolicy: IfNotPresent
+        name: folders
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: convoy-shared-config
+        image: docker.sas.com/dapage/init-blocker:1.6
+        name: init-blocker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/duname: foldersrvc
+    sas.com/version: 2.16.0
+  labels:
+    app.kubernetes.io/name: folders
+    helm.sh/chart: folders-2.16.0
+  name: folders
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: folders
+  type: ClusterIP
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/duname: foldersrvc
+    sas.com/version: 2.16.0
+  name: folders
+spec:
+  gateways:
+  - convoy-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /folders
+    - uri:
+        prefix: /folders/
+    route:
+    - destination:
+        host: folders.va40.svc.cluster.local

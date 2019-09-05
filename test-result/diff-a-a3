@@ -1,0 +1,5 @@
+../test/a.yaml(+) ../test/a3.yaml(-)
+-   nested: "keys",
++   and: "stuff",
+-   and: "stuff",
++   nested: "keys",

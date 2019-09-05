@@ -1,0 +1,7 @@
+../test/b.yaml(+) ../test/b2.yaml(-)
++ but: {
++  stuff: "moved here",
++ },
+-  {
+-   and: "changed.stuff",
+-  },

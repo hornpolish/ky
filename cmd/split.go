@@ -38,7 +38,7 @@ var splitCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(splitCmd)
-	splitCmd.Flags().StringVarP(&splitVar.outdir, "outdir", "o", "./gensplit", "Directory to generate into")
+	splitCmd.Flags().StringVarP(&splitVar.outdir, "outdir", "o", "./split", "Directory to split into")
 	splitCmd.Flags().BoolVarP(&splitVar.nest, "nest", "n", false, "Nested Directory per name?")
 }
 
@@ -68,7 +68,7 @@ func Split(args []string) error {
 	// TODO - error if directory exists, not empty
 	os.Mkdir(splitVar.outdir, os.ModePerm)
 
-	for key, value := range files {
+	for _, value := range files {
 
 		var m KubernetesAPI
 		var filename string
@@ -81,18 +81,16 @@ func Split(args []string) error {
 			return nil
 		}
 
-		fmt.Println("File: ", key, m.Kind)
-
 		if splitVar.nest == true {
 			dirname := splitVar.outdir + "/" + m.Metadata.Name
 			os.Mkdir(dirname, os.ModePerm)
 
 			filename = dirname + "/" + m.Kind + ".yaml"
 		} else {
-			filename = splitVar.outdir + m.Metadata.Name + "-" + m.Kind + ".yaml"
+			filename = splitVar.outdir + "/" + m.Metadata.Name + "-" + m.Kind + ".yaml"
 		}
 
-		fmt.Println(filename)
+		// TODO -v :: fmt.Println(filename)
 
 		f, err := os.Create(filename)
 		check(err)

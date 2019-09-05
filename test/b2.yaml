@@ -4,4 +4,4 @@ has:
   - nested: keys
 for: grins
 but:
-  - stuff: "moved here"
+  stuff: "moved here"

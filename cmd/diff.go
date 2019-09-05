@@ -15,6 +15,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// splitVar is the global struct for the split command
+var diffVar struct {
+	color   bool
+	nocolor bool
+}
+
 // diffCmd represents the diff command
 var diffCmd = &cobra.Command{
 	Use:   "diff",
@@ -34,33 +40,40 @@ var diffCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(diffCmd)
+	diffCmd.Flags().BoolVarP(&diffVar.color, "color", "c", isTerminal(), "Colors Please")
+	diffCmd.Flags().BoolVarP(&diffVar.nocolor, "nocolor", "n", false, "No Colors Please")
 }
 
 // Diff the two files
 func Diff(args []string) error {
-	var af aurora.Aurora
+	diff, err := diff2(args[0], args[1])
 
-	//TODO add -n|--no-color
-	noColor := false
-	if noColor == false && !isTerminal() {
-		noColor = true
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n\n", err.Error())
+		return err
 	}
-	af = aurora.NewAurora(true)
 
-	yaml1 := unmarshal(af, args[0])
-	yaml2 := unmarshal(af, args[1])
-
-	diff := computeDiff(af, yaml1, yaml2)
 	if diff != "" {
-		fmt.Println(args[0], "(-)", args[1], "(+)")
 		fmt.Println(diff)
-		os.Exit(8)
 	}
 
 	return nil
 }
 
-func unmarshal(af aurora.Aurora, filename string) interface{} {
+func diff2(f1 string, f2 string) (string, error) {
+	yaml1, err := unmarshal(f1)
+	if err != nil {
+		return "", err
+	}
+	yaml2, err := unmarshal(f2)
+	if err != nil {
+		return "", err
+	}
+
+	return computeDiff(f1, f2, yaml1, yaml2), err
+}
+
+func unmarshal(filename string) (interface{}, error) {
 	var contents []byte
 	var err error
 
@@ -70,40 +83,48 @@ func unmarshal(af aurora.Aurora, filename string) interface{} {
 		contents, err = ioutil.ReadFile(filename)
 	}
 	if err != nil {
-		errorFail(af, err)
+		return nil, err
 	}
 
 	var lines interface{}
 	err = yaml.Unmarshal(contents, &lines)
 	if err != nil {
-		errorFail(af, err)
+		return nil, err
 	}
-	return lines
+
+	return lines, nil
 }
 
-func errorFail(af aurora.Aurora, errors ...error) {
-	if len(errors) == 0 {
-		return
+func computeDiff(f1 string, f2 string, a interface{}, b interface{}) string {
+	color := diffVar.color
+	if diffVar.nocolor == true {
+		color = false
 	}
-	var errorMessages []string
-	for _, err := range errors {
-		errorMessages = append(errorMessages, err.Error())
-	}
-	fmt.Fprintf(os.Stderr, "%v\n\n", af.Red(strings.Join(errorMessages, "\n")))
-	os.Exit(1)
-}
+	af := aurora.NewAurora(color)
 
-func computeDiff(af aurora.Aurora, a interface{}, b interface{}) string {
+	headr := false
 	diffs := make([]string, 0)
+
 	for _, s := range strings.Split(pretty.Compare(a, b), "\n") {
+
 		switch {
 		case strings.HasPrefix(s, "+"):
 			diffs = append(diffs, af.Bold(af.Green(s)).String())
+			headr = true
 		case strings.HasPrefix(s, "-"):
 			diffs = append(diffs, af.Bold(af.Red(s)).String())
+			headr = true
 		}
 	}
-	return strings.Join(diffs, "\n")
+
+	if headr == true {
+		s1 := af.Bold(af.Green(f1 + "(+) ")).String()
+		s2 := af.Bold(af.Red(f2 + "(-)")).String()
+
+		return s1 + s2 + "\n" + strings.Join(diffs, "\n")
+	}
+
+	return ""
 }
 
 func isTerminal() bool {

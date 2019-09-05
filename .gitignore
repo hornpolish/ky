@@ -13,4 +13,10 @@ ky
 *.out
 
 # output of ky split
-generated/
+split/
+
+# test-output is where the tests put stuff
+test-output/
+
+# Others
+.vscode/
