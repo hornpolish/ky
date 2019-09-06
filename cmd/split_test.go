@@ -23,7 +23,7 @@ func TestSplit(t *testing.T) {
 	arg := make([]string, 2)
 
 	splitVar.outdir = "../test-output"
-	splitVar.nest = false
+	splitVar.nname = false
 	arg[0] = "../test/fifo.yaml"
 	Split(arg)
 
@@ -40,7 +40,7 @@ func TestSplitNest(t *testing.T) {
 	arg := make([]string, 2)
 
 	splitVar.outdir = "../test-output"
-	splitVar.nest = true
+	splitVar.nname = true
 	arg[0] = "../test/fifo.yaml"
 
 	Split(arg)

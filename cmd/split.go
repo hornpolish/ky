@@ -16,7 +16,8 @@ import (
 // splitVar is the global struct for the split command
 var splitVar struct {
 	outdir string
-	nest   bool
+	nname  bool
+	ntype  bool
 }
 
 // splitCmd represents the split command
@@ -39,7 +40,8 @@ var splitCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(splitCmd)
 	splitCmd.Flags().StringVarP(&splitVar.outdir, "outdir", "o", "./split", "Directory to split into")
-	splitCmd.Flags().BoolVarP(&splitVar.nest, "nest", "n", false, "Nested Directory per name?")
+	splitCmd.Flags().BoolVarP(&splitVar.nname, "nest-name", "n", false, "Nested Directory per name?")
+	splitCmd.Flags().BoolVarP(&splitVar.ntype, "nest-type", "t", false, "Nested Directory per type?")
 }
 
 func check(e error) {
@@ -81,11 +83,16 @@ func Split(args []string) error {
 			return nil
 		}
 
-		if splitVar.nest == true {
+		if splitVar.nname == true {
 			dirname := splitVar.outdir + "/" + m.Metadata.Name
 			os.Mkdir(dirname, os.ModePerm)
 
 			filename = dirname + "/" + m.Kind + ".yaml"
+		} else if splitVar.ntype == true {
+			dirname := splitVar.outdir + "/" + m.Kind
+			os.Mkdir(dirname, os.ModePerm)
+
+			filename = dirname + "/" + m.Metadata.Name + ".yaml"
 		} else {
 			filename = splitVar.outdir + "/" + m.Metadata.Name + "-" + m.Kind + ".yaml"
 		}
