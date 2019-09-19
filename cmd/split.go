@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -84,17 +85,17 @@ func Split(args []string) error {
 		}
 
 		if splitVar.nname == true {
-			dirname := splitVar.outdir + "/" + m.Metadata.Name
+			dirname := path.Join(splitVar.outdir, m.Metadata.Name)
 			os.Mkdir(dirname, os.ModePerm)
+			filename = path.Join(dirname, m.Kind+".yaml")
 
-			filename = dirname + "/" + m.Kind + ".yaml"
 		} else if splitVar.ntype == true {
-			dirname := splitVar.outdir + "/" + m.Kind
+			dirname := path.Join(splitVar.outdir, m.Kind)
 			os.Mkdir(dirname, os.ModePerm)
+			filename = path.Join(dirname, m.Metadata.Name+".yaml")
 
-			filename = dirname + "/" + m.Metadata.Name + ".yaml"
 		} else {
-			filename = splitVar.outdir + "/" + m.Metadata.Name + "-" + m.Kind + ".yaml"
+			filename = path.Join(splitVar.outdir, m.Metadata.Name+"-"+m.Kind+".yaml")
 		}
 
 		// TODO -v :: fmt.Println(filename)
