@@ -13,6 +13,8 @@ The split subroutines came from [Frederik Mogensen](https://github.com/mogensen/
 
 Their programming style was harmonized somewhat to mine, and the combined works published as KY, which operates in the kubectl style of {command} {verb} {noun}
 
+The github actions for golang came from/were inspired by [Bruno Paz](https://dev.to/brpaz/building-a-basic-ci-cd-pipeline-for-a-golang-application-using-github-actions-icj)
+
 # contributing
 
 The KY project welcomes contributions.  
@@ -20,7 +22,7 @@ The KY project welcomes contributions.
 * fork the repo
 * clone/pull from the fork
 * create a branch for the improvement
-* commit to the fork
+* commit to the fork/branch
 * raise a merge-request to splice your improvement into the KY project
 * "cheers!"
 
