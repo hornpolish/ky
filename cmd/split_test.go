@@ -53,3 +53,13 @@ func TestSplitNest(t *testing.T) {
 	compareTwo(t, "folders/Service.yaml")
 	compareTwo(t, "folders/VirtualService.yaml")
 }
+
+func TestSplitLarge(t *testing.T) {
+	arg := make([]string, 2)
+
+	splitVar.outdir = "../test-output/large"
+	splitVar.nname = true
+	arg[0] = "../test/large.yaml"
+
+	Split(arg)
+}

@@ -19,6 +19,7 @@ var splitVar struct {
 	outdir string
 	nname  bool
 	ntype  bool
+	debug  bool
 }
 
 // splitCmd represents the split command
@@ -43,6 +44,7 @@ func init() {
 	splitCmd.Flags().StringVarP(&splitVar.outdir, "outdir", "o", "./split", "Directory to split into")
 	splitCmd.Flags().BoolVarP(&splitVar.nname, "nest-name", "n", false, "Nested Directory per name?")
 	splitCmd.Flags().BoolVarP(&splitVar.ntype, "nest-type", "t", false, "Nested Directory per type?")
+	splitCmd.Flags().BoolVarP(&splitVar.debug, "debug", "d", false, "Debug?")
 }
 
 func check(e error) {
@@ -77,11 +79,10 @@ func Split(args []string) error {
 		var filename string
 
 		err := yaml.Unmarshal([]byte(value), &m)
-		check(err)
 
-		if m.Kind == "" {
+		if err != nil || m.Kind == "" {
 			fmt.Println("yaml file with no kind")
-			return nil
+			continue
 		}
 
 		if splitVar.nname == true {
@@ -98,14 +99,20 @@ func Split(args []string) error {
 			filename = path.Join(splitVar.outdir, m.Metadata.Name+"-"+m.Kind+".yaml")
 		}
 
-		// TODO -v :: fmt.Println(filename)
+		fmt.Println(filename)
 
 		f, err := os.Create(filename)
-		check(err)
-		defer f.Close()
+		if err != nil {
+			// print something!
+			continue
+		}
 
 		_, err = f.WriteString("---\n" + value)
-		check(err)
+		if err != nil {
+			// print something!
+		}
+
+		f.Close()
 	}
 
 	return nil
@@ -113,10 +120,14 @@ func Split(args []string) error {
 
 func readAndSplitFile(logfile string) map[int]string {
 
-	f, err := os.OpenFile(logfile, os.O_RDONLY, os.ModePerm)
-	check(err)
+	if splitVar.debug {
+		fmt.Printf("debug: split %s\n", logfile)
+	}
 
-	defer f.Close()
+	f, err := os.OpenFile(logfile, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		return nil
+	}
 
 	rd := bufio.NewReader(f)
 	c := make(map[int]string)
@@ -137,5 +148,7 @@ func readAndSplitFile(logfile string) map[int]string {
 			c[count] += line
 		}
 	}
+
+	f.Close()
 	return c
 }
