@@ -27,7 +27,7 @@ test-coverage: ## Run tests with coverage
 	cat cover.out >> coverage.txt
 
 build: dep ## Build the binary file
-	go build -ldflags "-X ${PKG}/cmd.version=${VERSION} -X ${PKG}/cmd.date=${DATETIME} -X ${PKG}/cmd.commit=${GITHASH}" -o build ./...
+	go build -ldflags "-X ${PKG}/cmd.version=${VERSION} -X ${PKG}/cmd.date=${DATETIME} -X ${PKG}/cmd.commit=${GITHASH}" -o build $PKG
  
 clean: ## Remove previous build
 	rm -f $(PROJECT_NAME)/build
