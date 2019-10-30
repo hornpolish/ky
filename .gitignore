@@ -12,7 +12,10 @@ ky
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# output of ky split
+# build output
+build/
+
+# default output of ky split
 split/
 
 # test-output is where the tests put stuff
