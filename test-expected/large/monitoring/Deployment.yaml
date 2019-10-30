@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: monitoring
+    foo.com/duversion: 2.2.2-20190920.1568984896700
+    foo.com/version: 2.2.2
+  labels:
+    app.kubernetes.io/name: monitoring
+    helm.sh/chart: monitoring-2.2.2
+  name: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: monitoring
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: monitoring
+        app.kubernetes.io/name: monitoring
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-monitoring:2.2.2-20190920.1568984896700
+        imagePullPolicy: IfNotPresent
+        name: monitoring
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

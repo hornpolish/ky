@@ -1,0 +1,28 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: cachelocator
+    foo.com/duversion: 1.2.11-20190909.1568059269818
+    foo.com/version: 1.2.11
+  labels:
+    app.kubernetes.io/name: cachelocator
+    helm.sh/chart: cachelocator-1.2.11
+  name: cachelocator
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - name: cachelocator
+    port: 41415
+    targetPort: cachelocator
+  - name: http-internal
+    port: 8080
+    protocol: TCP
+    targetPort: http-internal
+  selector:
+    app.kubernetes.io/name: cachelocator
+  type: ClusterIP

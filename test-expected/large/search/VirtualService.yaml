@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: searchservice
+    foo.com/duversion: 2.5.4-20190920.1568961240990
+    foo.com/version: 2.5.4
+  labels:
+    app.kubernetes.io/name: searchservice
+    helm.sh/chart: searchservice-2.5.4
+  name: search
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /search
+    - uri:
+        prefix: /search/
+    route:
+    - destination:
+        host: search.peekay.svc.cluster.local

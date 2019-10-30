@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: thumbnails
+    foo.com/duversion: 1.2.382-20190925.1569390530243
+    foo.com/version: 1.2.382
+  labels:
+    app.kubernetes.io/name: thumbnails
+    helm.sh/chart: thumbnails-1.2.382
+  name: thumbnails
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /thumbnails
+    - uri:
+        prefix: /thumbnails/
+    route:
+    - destination:
+        host: thumbnails.peekay.svc.cluster.local

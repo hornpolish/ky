@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: types
+    foo.com/duversion: 3.9.2-20190923.1569257962410
+    foo.com/version: 3.9.2
+  labels:
+    app.kubernetes.io/name: types
+    helm.sh/chart: types-3.9.2
+  name: types
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /types
+    - uri:
+        prefix: /types/
+    route:
+    - destination:
+        host: types.peekay.svc.cluster.local

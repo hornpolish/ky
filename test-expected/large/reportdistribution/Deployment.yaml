@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: reportdistribution
+    foo.com/duversion: 2.7.76-20190925.1569390025144
+    foo.com/version: 2.7.76
+  labels:
+    app.kubernetes.io/name: reportdistribution
+    helm.sh/chart: reportdistribution-2.7.76
+  name: reportdistribution
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reportdistribution
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: reportdistribution
+        app.kubernetes.io/name: reportdistribution
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-reportdistribution:2.7.76-20190925.1569390025144
+        imagePullPolicy: IfNotPresent
+        name: reportdistribution
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

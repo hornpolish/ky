@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: datamining
+    foo.com/duversion: 39.0.33-20190921.1569051370019
+    foo.com/version: 39.0.33
+  labels:
+    app.kubernetes.io/name: datamining
+    helm.sh/chart: datamining-39.0.33
+  name: dataminingwarehouse
+spec:
+  ports:
+  - name: dminewh
+    port: 80
+    protocol: TCP
+    targetPort: dminewh
+  selector:
+    app.kubernetes.io/name: datamining
+  type: ClusterIP

@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: scoreexecutn
+    foo.com/duversion: 2.11.55-20190924.1569361127727
+    foo.com/version: 2.11.55
+  labels:
+    app.kubernetes.io/name: scoreexecution
+    helm.sh/chart: scoreexecution-2.11.55
+  name: scoreexecution
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: scoreexecution
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: scoreexecution
+        app.kubernetes.io/name: scoreexecution
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-scoreexecution:2.11.55-20190924.1569361127727
+        imagePullPolicy: IfNotPresent
+        name: scoreexecution
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

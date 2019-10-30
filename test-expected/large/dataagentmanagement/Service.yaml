@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: dataagentservices
+    foo.com/duversion: 1.2.45-20190924.1569376755793
+    foo.com/version: 1.2.45
+  labels:
+    app.kubernetes.io/name: dataagentservices
+    helm.sh/chart: dataagentservices-1.2.45
+  name: dataagentmanagement
+spec:
+  ports:
+  - name: dagentmgmt
+    port: 80
+    protocol: TCP
+    targetPort: dagentmgmt
+  selector:
+    app.kubernetes.io/name: dataagentservices
+  type: ClusterIP

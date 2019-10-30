@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: graphbuilder
+    foo.com/duversion: 1.8.84-20190925.1569390540963
+    foo.com/version: 1.8.84
+  labels:
+    app.kubernetes.io/name: foographbuilder
+    helm.sh/chart: foographbuilder-1.8.84
+  name: foographbuilder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: foographbuilder
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: foographbuilder
+        app.kubernetes.io/name: foographbuilder
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-foographbuilder:1.8.84-20190925.1569390540963
+        imagePullPolicy: IfNotPresent
+        name: foographbuilder
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

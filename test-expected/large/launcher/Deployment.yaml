@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: launcher
+    foo.com/duversion: 1.7.1-20190808.1565279673858
+    foo.com/version: 1.7.1
+  labels:
+    app.kubernetes.io/name: launcher
+    helm.sh/chart: launcher-1.7.1
+  name: launcher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: launcher
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: launcher
+        app.kubernetes.io/name: launcher
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-launcher:1.7.1-20190808.1565279673858
+        imagePullPolicy: IfNotPresent
+        name: launcher
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

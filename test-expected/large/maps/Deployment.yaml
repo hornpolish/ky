@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: maps
+    foo.com/duversion: 1.11.92-20190925.1569390023668
+    foo.com/version: 1.11.92
+  labels:
+    app.kubernetes.io/name: maps
+    helm.sh/chart: maps-1.11.92
+  name: maps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: maps
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: maps
+        app.kubernetes.io/name: maps
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-maps:1.11.92-20190925.1569390023668
+        imagePullPolicy: IfNotPresent
+        name: maps
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

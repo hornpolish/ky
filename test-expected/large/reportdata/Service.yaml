@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: reportdata
+    foo.com/duversion: 1.14.75-20190925.1569390034591
+    foo.com/version: 1.14.75
+  labels:
+    app.kubernetes.io/name: reportdata
+    helm.sh/chart: reportdata-1.14.75
+  name: reportdata
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - name: cache1
+    port: 35001
+    targetPort: cache1
+  - name: cache2
+    port: 35002
+    targetPort: cache2
+  - name: cache3
+    port: 35003
+    targetPort: cache3
+  selector:
+    app.kubernetes.io/name: reportdata
+  type: ClusterIP

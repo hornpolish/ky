@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: jobexecapp
+    foo.com/duversion: 2.2.17-20190911.1568206309536
+    foo.com/version: 2.2.17
+  labels:
+    app.kubernetes.io/name: foojobexecution
+    helm.sh/chart: foojobexecution-2.2.17
+  name: foojobexecution
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /FOOJobExecution
+    - uri:
+        prefix: /FOOJobExecution/
+    route:
+    - destination:
+        host: foojobexecution.peekay.svc.cluster.local

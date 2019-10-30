@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: deviceManagement
+    foo.com/duversion: 1.9.388-20190925.1569389370463
+    foo.com/version: 1.9.388
+  labels:
+    app.kubernetes.io/name: devicemanagement
+    helm.sh/chart: devicemanagement-1.9.388
+  name: devicemanagement
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: devicemanagement
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: devicemanagement
+        app.kubernetes.io/name: devicemanagement
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-device-management:1.9.388-20190925.1569389370463
+        imagePullPolicy: IfNotPresent
+        name: devicemanagement
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

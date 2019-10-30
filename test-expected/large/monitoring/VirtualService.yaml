@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: monitoring
+    foo.com/duversion: 2.2.2-20190920.1568984896700
+    foo.com/version: 2.2.2
+  labels:
+    app.kubernetes.io/name: monitoring
+    helm.sh/chart: monitoring-2.2.2
+  name: monitoring
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /monitoring
+    - uri:
+        prefix: /monitoring/
+    route:
+    - destination:
+        host: monitoring.peekay.svc.cluster.local

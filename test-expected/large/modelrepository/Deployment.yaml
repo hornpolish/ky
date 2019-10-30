@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: modelrepo
+    foo.com/duversion: 3.7.96-20190818.1566162822182
+    foo.com/version: 3.7.96
+  labels:
+    app.kubernetes.io/name: modelrepository
+    helm.sh/chart: modelrepository-3.7.96
+  name: modelrepository
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: modelrepository
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: modelrepository
+        app.kubernetes.io/name: modelrepository
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-modelrepository:3.7.96-20190818.1566162822182
+        imagePullPolicy: IfNotPresent
+        name: modelrepository
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

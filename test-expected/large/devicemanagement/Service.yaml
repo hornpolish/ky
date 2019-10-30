@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: deviceManagement
+    foo.com/duversion: 1.9.388-20190925.1569389370463
+    foo.com/version: 1.9.388
+  labels:
+    app.kubernetes.io/name: devicemanagement
+    helm.sh/chart: devicemanagement-1.9.388
+  name: devicemanagement
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: devicemanagement
+  type: ClusterIP

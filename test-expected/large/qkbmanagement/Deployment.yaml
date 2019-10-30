@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: qkbadminsvc
+    foo.com/duversion: 2.4.86-20190924.1569376632890
+    foo.com/version: 2.4.86
+  labels:
+    app.kubernetes.io/name: qkbmanagement
+    helm.sh/chart: qkbmanagement-2.4.86
+  name: qkbmanagement
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: qkbmanagement
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: qkbmanagement
+        app.kubernetes.io/name: qkbmanagement
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdq-125.0.0-x64_redhat_linux_7-docker-prod/foo-qkbmanagement:2.4.86-20190924.1569376632890
+        imagePullPolicy: IfNotPresent
+        name: qkbmanagement
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

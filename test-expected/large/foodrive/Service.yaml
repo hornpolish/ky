@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: drive
+    foo.com/duversion: 2.2.62-20190924.1569309523489
+    foo.com/version: 2.2.62
+  labels:
+    app.kubernetes.io/name: foodrive
+    helm.sh/chart: foodrive-2.2.62
+  name: foodrive
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: foodrive
+  type: ClusterIP

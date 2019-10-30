@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: mlpipelineautomation
+    foo.com/duversion: 0.0.180-20190921.1569051268585
+    foo.com/version: 0.0.180
+  labels:
+    app.kubernetes.io/name: mlpipelineautomation
+    helm.sh/chart: mlpipelineautomation-0.0.180
+  name: mlpipelineautomation
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /mlPipelineAutomation
+    - uri:
+        prefix: /mlPipelineAutomation/
+    route:
+    - destination:
+        host: mlpipelineautomation.peekay.svc.cluster.local

@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: cachelocator
+    foo.com/duversion: 1.2.11-20190909.1568059269818
+    foo.com/version: 1.2.11
+  labels:
+    app.kubernetes.io/name: cachelocator
+    helm.sh/chart: cachelocator-1.2.11
+  name: cachelocator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cachelocator
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: cachelocator
+        app.kubernetes.io/name: cachelocator
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTION_FOO_CACHE_LOCATOR_PORT
+          value: -Dfoo.cache.locator.port=41415
+        - name: JAVA_OPTION_FOO_CACHE_LOCATOR_HOSTNAMEFORCLIENTS
+          value: -Dfoo.cache.locator.hostnameForClients=cachelocator.peekay.svc.cluster.local
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-cachelocator:1.2.11-20190909.1568059269818
+        imagePullPolicy: IfNotPresent
+        name: cachelocator
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 41415
+          name: cachelocator
+        - containerPort: 8080
+          name: http-internal
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: preferences
+    foo.com/duversion: 1.8.12-20190909.1568066319809
+    foo.com/version: 1.8.12
+  labels:
+    app.kubernetes.io/name: preferences
+    helm.sh/chart: preferences-1.8.12
+  name: preferences
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /preferences
+    - uri:
+        prefix: /preferences/
+    route:
+    - destination:
+        host: preferences.peekay.svc.cluster.local

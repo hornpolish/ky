@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: filesservice
+    foo.com/duversion: 2.10.4-20190910.1568136785094
+    foo.com/version: 2.10.4
+  labels:
+    app.kubernetes.io/name: files
+    helm.sh/chart: files-2.10.4
+  name: files
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /files
+    - uri:
+        prefix: /files/
+    route:
+    - destination:
+        host: files.peekay.svc.cluster.local

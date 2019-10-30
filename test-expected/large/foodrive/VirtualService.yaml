@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: drive
+    foo.com/duversion: 2.2.62-20190924.1569309523489
+    foo.com/version: 2.2.62
+  labels:
+    app.kubernetes.io/name: foodrive
+    helm.sh/chart: foodrive-2.2.62
+  name: foodrive
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /FOODrive
+    - uri:
+        prefix: /FOODrive/
+    route:
+    - destination:
+        host: foodrive.peekay.svc.cluster.local

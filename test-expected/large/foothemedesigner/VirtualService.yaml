@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: themedesign
+    foo.com/duversion: 3.5.106-20190925.1569388169161
+    foo.com/version: 3.5.106
+  labels:
+    app.kubernetes.io/name: foothemedesigner
+    helm.sh/chart: foothemedesigner-3.5.106
+  name: foothemedesigner
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /FOOThemeDesigner
+    - uri:
+        prefix: /FOOThemeDesigner/
+    route:
+    - destination:
+        host: foothemedesigner.peekay.svc.cluster.local

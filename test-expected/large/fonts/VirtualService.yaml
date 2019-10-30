@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: fonts
+    foo.com/duversion: 1.8.79-20190925.1569389381676
+    foo.com/version: 1.8.79
+  labels:
+    app.kubernetes.io/name: fonts
+    helm.sh/chart: fonts-1.8.79
+  name: fonts
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /fonts
+    - uri:
+        prefix: /fonts/
+    route:
+    - destination:
+        host: fonts.peekay.svc.cluster.local

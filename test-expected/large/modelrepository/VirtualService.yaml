@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: modelrepo
+    foo.com/duversion: 3.7.96-20190818.1566162822182
+    foo.com/version: 3.7.96
+  labels:
+    app.kubernetes.io/name: modelrepository
+    helm.sh/chart: modelrepository-3.7.96
+  name: modelrepository
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /modelRepository
+    - uri:
+        prefix: /modelRepository/
+    route:
+    - destination:
+        host: modelrepository.peekay.svc.cluster.local

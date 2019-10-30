@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: casformats
+    foo.com/duversion: 1.5.6-20190923.1569266192327
+    foo.com/version: 1.5.6
+  labels:
+    app.kubernetes.io/name: casformats
+    helm.sh/chart: casformats-1.5.6
+  name: casformats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: casformats
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: casformats
+        app.kubernetes.io/name: casformats
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-cas-formats:1.5.6-20190923.1569266192327
+        imagePullPolicy: IfNotPresent
+        name: casformats
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

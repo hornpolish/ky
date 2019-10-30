@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: audit
+    foo.com/duversion: 1.16.13-20190909.1568058546912
+    foo.com/version: 1.16.13
+  labels:
+    app.kubernetes.io/name: audit
+    helm.sh/chart: audit-1.16.13
+  name: audit
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: audit
+  type: ClusterIP

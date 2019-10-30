@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: reportViewerNaturalLanguageUnderstanding
+    foo.com/duversion: 1.2.380-20190925.1569390558401
+    foo.com/version: 1.2.380
+  labels:
+    app.kubernetes.io/name: reportviewernaturallanguageunderstanding
+    helm.sh/chart: reportviewernaturallanguageunderstanding-1.2.380
+  name: reportviewernaturallanguageunderstanding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reportviewernaturallanguageunderstanding
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: reportviewernaturallanguageunderstanding
+        app.kubernetes.io/name: reportviewernaturallanguageunderstanding
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-reportviewernaturallanguageunderstanding:1.2.380-20190925.1569390558401
+        imagePullPolicy: IfNotPresent
+        name: reportviewernaturallanguageunderstanding
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

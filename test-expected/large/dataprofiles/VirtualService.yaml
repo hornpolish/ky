@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: dmprofilesvc
+    foo.com/duversion: 4.5.79-20190924.1569376682518
+    foo.com/version: 4.5.79
+  labels:
+    app.kubernetes.io/name: dataprofiles
+    helm.sh/chart: dataprofiles-4.5.79
+  name: dataprofiles
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /dataProfiles
+    - uri:
+        prefix: /dataProfiles/
+    route:
+    - destination:
+        host: dataprofiles.peekay.svc.cluster.local

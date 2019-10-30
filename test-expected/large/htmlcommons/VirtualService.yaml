@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: dkrhttpproxy
+    foo.com/duversion: 1.5.42-20190924.1569321426630
+    foo.com/version: 1.5.42
+  labels:
+    app.kubernetes.io/name: htmlcommons
+    helm.sh/chart: htmlcommons-1.5.42
+  name: htmlcommons
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /htmlcommons
+    - uri:
+        prefix: /htmlcommons/
+    route:
+    - destination:
+        host: htmlcommons.peekay.svc.cluster.local

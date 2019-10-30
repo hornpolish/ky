@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: arke
+    foo.com/duversion: 0.1.5-20190911.1568211757
+    foo.com/version: 0.1.5
+  labels:
+    app.kubernetes.io/name: arke
+    helm.sh/chart: arke-0.1.5
+  name: arke
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: arke
+  template:
+    metadata:
+      labels:
+        app: arke
+        app.kubernetes.io/name: arke
+    spec:
+      containers:
+      - env: []
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-go-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-arke:0.1.5-20190911.1568211757
+        imagePullPolicy: IfNotPresent
+        name: arke
+        ports:
+        - containerPort: 50051
+          name: tcp
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

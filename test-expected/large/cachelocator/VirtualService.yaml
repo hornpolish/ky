@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: cachelocator
+    foo.com/duversion: 1.2.11-20190909.1568059269818
+    foo.com/version: 1.2.11
+  labels:
+    app.kubernetes.io/name: cachelocator
+    helm.sh/chart: cachelocator-1.2.11
+  name: cachelocator
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /cachelocator
+    - uri:
+        prefix: /cachelocator/
+    route:
+    - destination:
+        host: cachelocator.peekay.svc.cluster.local

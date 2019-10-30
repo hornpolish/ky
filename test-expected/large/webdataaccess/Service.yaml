@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: web-data-access
+    foo.com/duversion: 1.6.9-20190923.1569266249780
+    foo.com/version: 1.6.9
+  labels:
+    app.kubernetes.io/name: webdataaccess
+    helm.sh/chart: webdataaccess-1.6.9
+  name: webdataaccess
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: webdataaccess
+  type: ClusterIP

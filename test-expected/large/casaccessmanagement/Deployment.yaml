@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: casacl
+    foo.com/duversion: 1.6.9-20190923.1569266206874
+    foo.com/version: 1.6.9
+  labels:
+    app.kubernetes.io/name: casaccessmanagement
+    helm.sh/chart: casaccessmanagement-1.6.9
+  name: casaccessmanagement
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: casaccessmanagement
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: casaccessmanagement
+        app.kubernetes.io/name: casaccessmanagement
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-cas-access-management:1.6.9-20190923.1569266206874
+        imagePullPolicy: IfNotPresent
+        name: casaccessmanagement
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

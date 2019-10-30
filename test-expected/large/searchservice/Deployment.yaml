@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: searchservice
+    foo.com/duversion: 2.5.4-20190920.1568961240990
+    foo.com/version: 2.5.4
+  labels:
+    app.kubernetes.io/name: searchservice
+    helm.sh/chart: searchservice-2.5.4
+  name: searchservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: searchservice
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: searchservice
+        app.kubernetes.io/name: searchservice
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        - name: FOO_SEARCH_SERVER_PORT
+          value: "8081"
+        - name: FOO_SEARCHINDEX_SERVER_PORT
+          value: "8082"
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-search:2.5.4-20190920.1568961240990
+        imagePullPolicy: IfNotPresent
+        name: searchservice
+        ports:
+        - containerPort: 8081
+          name: search
+          protocol: TCP
+        - containerPort: 8082
+          name: searchindex
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

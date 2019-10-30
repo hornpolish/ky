@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: foldersrvc
+    foo.com/duversion: 2.16.5-20190909.1568063600056
+    foo.com/version: 2.16.5
+  labels:
+    app.kubernetes.io/name: folders
+    helm.sh/chart: folders-2.16.5
+  name: folders
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: folders
+  type: ClusterIP

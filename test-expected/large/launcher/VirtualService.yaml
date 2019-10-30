@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: launcher
+    foo.com/duversion: 1.7.1-20190808.1565279673858
+    foo.com/version: 1.7.1
+  labels:
+    app.kubernetes.io/name: launcher
+    helm.sh/chart: launcher-1.7.1
+  name: launcher
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /launcher
+    - uri:
+        prefix: /launcher/
+    route:
+    - destination:
+        host: launcher.peekay.svc.cluster.local

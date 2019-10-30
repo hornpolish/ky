@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: configuratn
+    foo.com/duversion: 1.32.9-20190909.1568062554716
+    foo.com/version: 1.32.9
+  labels:
+    app.kubernetes.io/name: configuration
+    helm.sh/chart: configuration-1.32.9
+  name: configuration
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /configuration
+    - uri:
+        prefix: /configuration/
+    route:
+    - destination:
+        host: configuration.peekay.svc.cluster.local

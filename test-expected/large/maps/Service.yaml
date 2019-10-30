@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: maps
+    foo.com/duversion: 1.11.92-20190925.1569390023668
+    foo.com/version: 1.11.92
+  labels:
+    app.kubernetes.io/name: maps
+    helm.sh/chart: maps-1.11.92
+  name: maps
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: maps
+  type: ClusterIP

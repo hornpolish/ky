@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: links
+    foo.com/duversion: 1.9.384-20190925.1569389392426
+    foo.com/version: 1.9.384
+  labels:
+    app.kubernetes.io/name: links
+    helm.sh/chart: links-1.9.384
+  name: links
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: links
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: links
+        app.kubernetes.io/name: links
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-links:1.9.384-20190925.1569389392426
+        imagePullPolicy: IfNotPresent
+        name: links
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

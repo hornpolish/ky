@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: dmdataservices
+    foo.com/duversion: 3.9.75-20190924.1569376667733
+    foo.com/version: 3.9.75
+  labels:
+    app.kubernetes.io/name: dmdataservices
+    helm.sh/chart: dmdataservices-3.9.75
+  name: rowsets
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /rowSets
+    - uri:
+        prefix: /rowSets/
+    route:
+    - destination:
+        host: rowsets.peekay.svc.cluster.local

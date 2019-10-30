@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: reportRenderer
+    foo.com/duversion: 1.13.79-20190925.1569390041779
+    foo.com/version: 1.13.79
+  labels:
+    app.kubernetes.io/name: reportrenderer
+    helm.sh/chart: reportrenderer-1.13.79
+  name: reportrenderer
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /reportRenderer
+    - uri:
+        prefix: /reportRenderer/
+    route:
+    - destination:
+        host: reportrenderer.peekay.svc.cluster.local

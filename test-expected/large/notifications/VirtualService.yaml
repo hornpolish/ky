@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: notification
+    foo.com/duversion: 1.7.13-20190909.1568066006938
+    foo.com/version: 1.7.13
+  labels:
+    app.kubernetes.io/name: notifications
+    helm.sh/chart: notifications-1.7.13
+  name: notifications
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /notifications
+    - uri:
+        prefix: /notifications/
+    route:
+    - destination:
+        host: notifications.peekay.svc.cluster.local

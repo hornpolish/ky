@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: compservice
+    foo.com/duversion: 1.4.10-20190911.1568209638137
+    foo.com/version: 1.4.10
+  labels:
+    app.kubernetes.io/name: compute
+    helm.sh/chart: compute-1.4.10
+  name: compute
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /compute
+    - uri:
+        prefix: /compute/
+    route:
+    - destination:
+        host: compute.peekay.svc.cluster.local

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: aaservices
+    foo.com/duversion: 1.1.55-20190924.1569367446918
+    foo.com/version: 1.1.55
+  labels:
+    app.kubernetes.io/name: aaservices
+    helm.sh/chart: aaservices-1.1.55
+  name: analyticsvalidation
+spec:
+  ports:
+  - name: aavalidation
+    port: 80
+    protocol: TCP
+    targetPort: aavalidation
+  selector:
+    app.kubernetes.io/name: aaservices
+  type: ClusterIP

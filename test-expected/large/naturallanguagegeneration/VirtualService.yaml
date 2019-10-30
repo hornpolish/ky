@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: naturalLanguageGeneration
+    foo.com/duversion: 1.2.8-20190918.1568856760889
+    foo.com/version: 1.2.8
+  labels:
+    app.kubernetes.io/name: naturallanguagegeneration
+    helm.sh/chart: naturallanguagegeneration-1.2.8
+  name: naturallanguagegeneration
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /naturalLanguageGeneration
+    - uri:
+        prefix: /naturalLanguageGeneration/
+    route:
+    - destination:
+        host: naturallanguagegeneration.peekay.svc.cluster.local

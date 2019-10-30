@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: aaservices
+    foo.com/duversion: 1.1.55-20190924.1569367446918
+    foo.com/version: 1.1.55
+  labels:
+    app.kubernetes.io/name: aaservices
+    helm.sh/chart: aaservices-1.1.55
+  name: analyticsflows
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /analyticsFlows
+    - uri:
+        prefix: /analyticsFlows/
+    route:
+    - destination:
+        host: analyticsflows.peekay.svc.cluster.local

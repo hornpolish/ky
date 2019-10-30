@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dmprofilesvc
+    foo.com/duversion: 4.5.79-20190924.1569376682518
+    foo.com/version: 4.5.79
+  labels:
+    app.kubernetes.io/name: dataprofiles
+    helm.sh/chart: dataprofiles-4.5.79
+  name: dataprofiles
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dataprofiles
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: dataprofiles
+        app.kubernetes.io/name: dataprofiles
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-dataprofiles:4.5.79-20190924.1569376682518
+        imagePullPolicy: IfNotPresent
+        name: dataprofiles
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

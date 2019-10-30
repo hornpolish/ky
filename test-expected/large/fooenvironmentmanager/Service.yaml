@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: envmgr-app
+    foo.com/duversion: 3.3.150-20190924.1569381612463
+    foo.com/version: 3.3.150
+  labels:
+    app.kubernetes.io/name: fooenvironmentmanager
+    helm.sh/chart: fooenvironmentmanager-3.3.150
+  name: fooenvironmentmanager
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: fooenvironmentmanager
+  type: ClusterIP

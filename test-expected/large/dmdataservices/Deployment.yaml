@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dmdataservices
+    foo.com/duversion: 3.9.75-20190924.1569376667733
+    foo.com/version: 3.9.75
+  labels:
+    app.kubernetes.io/name: dmdataservices
+    helm.sh/chart: dmdataservices-3.9.75
+  name: dmdataservices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dmdataservices
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: dmdataservices
+        app.kubernetes.io/name: dmdataservices
+    spec:
+      containers:
+      - env:
+        - name: FOO_DATASOURCES_SERVER_PORT
+          value: "8080"
+        - name: FOO_DATATABLES_SERVER_PORT
+          value: "8081"
+        - name: FOO_ROWSETS_SERVER_PORT
+          value: "8082"
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-dmdataservices:3.9.75-20190924.1569376667733
+        imagePullPolicy: IfNotPresent
+        name: dmdataservices
+        ports:
+        - containerPort: 8080
+          name: datasources
+          protocol: TCP
+        - containerPort: 8081
+          name: datatables
+          protocol: TCP
+        - containerPort: 8082
+          name: rowsets
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

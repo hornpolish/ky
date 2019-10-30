@@ -1,0 +1,77 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dkrcasall
+    foo.com/duversion: 1.1.0-20190924.1569321907045
+    foo.com/version: 1.1.0
+  labels:
+    app.kubernetes.io/name: dkrcasall
+    helm.sh/chart: dkrcasall-1.1.0
+  name: dkrcasall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dkrcasall
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: dkrcasall
+        app.kubernetes.io/name: dkrcasall
+    spec:
+      containers:
+      - env:
+        - name: CASKEY
+        - name: CASCFG_MODE
+          value: smp
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/vcmnfnd-135.0.0-x64_redhat_linux_7-docker-prod/foo-cas-server:1.1.0-20190924.1569321907045
+        imagePullPolicy: IfNotPresent
+        name: dkrcasall
+        ports:
+        - containerPort: 8777
+          name: http
+          protocol: TCP
+        - containerPort: 5570
+          name: binary
+          protocol: TCP
+        - containerPort: 5571
+          name: gc
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /cas/permstore
+          name: foo-viya-dkrcasall-permstore-volume
+        - mountPath: /cas/data
+          name: foo-viya-dkrcasall-data-volume
+        - mountPath: /etc/sssd
+          name: sssd-config
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker
+      volumes:
+      - name: foo-viya-dkrcasall-permstore-volume
+        persistentVolumeClaim:
+          claimName: dkrcasall-permstore
+      - name: foo-viya-dkrcasall-data-volume
+        persistentVolumeClaim:
+          claimName: dkrcasall-data
+      - configMap:
+          items:
+          - key: SSSD_CONF
+            mode: 384
+            path: sssd.conf
+          name: foo-sssd-config
+        name: sssd-config

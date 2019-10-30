@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: geo-enhancement
+    foo.com/duversion: 1.6.7-20190923.1569266256796
+    foo.com/version: 1.6.7
+  labels:
+    app.kubernetes.io/name: geoenrichment
+    helm.sh/chart: geoenrichment-1.6.7
+  name: geoenrichment
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /geoEnrichment
+    - uri:
+        prefix: /geoEnrichment/
+    route:
+    - destination:
+        host: geoenrichment.peekay.svc.cluster.local

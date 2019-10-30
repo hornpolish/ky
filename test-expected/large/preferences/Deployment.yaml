@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: preferences
+    foo.com/duversion: 1.8.12-20190909.1568066319809
+    foo.com/version: 1.8.12
+  labels:
+    app.kubernetes.io/name: preferences
+    helm.sh/chart: preferences-1.8.12
+  name: preferences
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: preferences
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: preferences
+        app.kubernetes.io/name: preferences
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-preferences:1.8.12-20190909.1568066319809
+        imagePullPolicy: IfNotPresent
+        name: preferences
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: import9
+    foo.com/duversion: 1.0.5-20190910.1568120211560
+    foo.com/version: 1.0.5
+  labels:
+    app.kubernetes.io/name: import9
+    helm.sh/chart: import9-1.0.5
+  name: import9
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: import9
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: import9
+        app.kubernetes.io/name: import9
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-import9:1.0.5-20190910.1568120211560
+        imagePullPolicy: IfNotPresent
+        name: import9
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

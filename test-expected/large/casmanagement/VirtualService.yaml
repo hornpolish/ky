@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: cas-administration
+    foo.com/duversion: 1.1.8-20190924.1569378146973
+    foo.com/version: 1.1.8
+  labels:
+    app.kubernetes.io/name: casadministration
+    helm.sh/chart: casadministration-1.1.8
+  name: casmanagement
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /casManagement
+    - uri:
+        prefix: /casManagement/
+    route:
+    - destination:
+        host: casmanagement.peekay.svc.cluster.local

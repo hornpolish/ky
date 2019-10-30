@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: appregistry
+    foo.com/duversion: 1.9.396-20190925.1569389375690
+    foo.com/version: 1.9.396
+  labels:
+    app.kubernetes.io/name: appregistry
+    helm.sh/chart: appregistry-1.9.396
+  name: appregistry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: appregistry
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: appregistry
+        app.kubernetes.io/name: appregistry
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-appregistry:1.9.396-20190925.1569389375690
+        imagePullPolicy: IfNotPresent
+        name: appregistry
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

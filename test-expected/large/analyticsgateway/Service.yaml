@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: aaservices2
+    foo.com/duversion: 1.1.55-20190924.1569367447223
+    foo.com/version: 1.1.55
+  labels:
+    app.kubernetes.io/name: aaservices2
+    helm.sh/chart: aaservices2-1.1.55
+  name: analyticsgateway
+spec:
+  ports:
+  - name: aagateway
+    port: 80
+    protocol: TCP
+    targetPort: aagateway
+  selector:
+    app.kubernetes.io/name: aaservices2
+  type: ClusterIP

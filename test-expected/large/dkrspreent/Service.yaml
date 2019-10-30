@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: dkrspreent
+    foo.com/duversion: 1.1.1-20190918.1568814463508
+    foo.com/version: 1.1.1
+  labels:
+    app.kubernetes.io/name: dkrspreent
+    helm.sh/chart: dkrspreent-1.1.1
+  name: dkrspreent
+spec:
+  ports:
+  - name: spawnercfg
+    port: 8591
+    targetPort: spawnercfg
+  - name: launcher
+    port: 8087
+    targetPort: launcher
+  - name: compute1
+    port: 8088
+    targetPort: compute1
+  - name: compute2
+    port: 8089
+    targetPort: compute2
+  - name: compute3
+    port: 8090
+    targetPort: compute3
+  - name: compute4
+    port: 8091
+    targetPort: compute4
+  - name: compute5
+    port: 8092
+    targetPort: compute5
+  - name: compute6
+    port: 8093
+    targetPort: compute6
+  - name: compute7
+    port: 8094
+    targetPort: compute7
+  - name: compute8
+    port: 8095
+    targetPort: compute8
+  - name: compute9
+    port: 8096
+    targetPort: compute9
+  - name: compute10
+    port: 8097
+    targetPort: compute10
+  selector:
+    app.kubernetes.io/name: dkrspreent
+  type: ClusterIP

@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: transfer
+    foo.com/duversion: 2.13.3-20190910.1568139026185
+    foo.com/version: 2.13.3
+  labels:
+    app.kubernetes.io/name: transfer
+    helm.sh/chart: transfer-2.13.3
+  name: transfer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: transfer
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: transfer
+        app.kubernetes.io/name: transfer
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-transfer:2.13.3-20190910.1568139026185
+        imagePullPolicy: IfNotPresent
+        name: transfer
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

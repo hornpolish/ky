@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: casacl
+    foo.com/duversion: 1.6.9-20190923.1569266206874
+    foo.com/version: 1.6.9
+  labels:
+    app.kubernetes.io/name: casaccessmanagement
+    helm.sh/chart: casaccessmanagement-1.6.9
+  name: casaccessmanagement
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /casAccessManagement
+    - uri:
+        prefix: /casAccessManagement/
+    route:
+    - destination:
+        host: casaccessmanagement.peekay.svc.cluster.local

@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: graphtemplates
+    foo.com/duversion: 1.5.383-20190925.1569389366352
+    foo.com/version: 1.5.383
+  labels:
+    app.kubernetes.io/name: graphtemplates
+    helm.sh/chart: graphtemplates-1.5.383
+  name: graphtemplates
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: graphtemplates
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: graphtemplates
+        app.kubernetes.io/name: graphtemplates
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-graph-templates:1.5.383-20190925.1569389366352
+        imagePullPolicy: IfNotPresent
+        name: graphtemplates
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

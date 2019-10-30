@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: web-data-access
+    foo.com/duversion: 1.6.9-20190923.1569266249780
+    foo.com/version: 1.6.9
+  labels:
+    app.kubernetes.io/name: webdataaccess
+    helm.sh/chart: webdataaccess-1.6.9
+  name: webdataaccess
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /webDataAccess
+    - uri:
+        prefix: /webDataAccess/
+    route:
+    - destination:
+        host: webdataaccess.peekay.svc.cluster.local

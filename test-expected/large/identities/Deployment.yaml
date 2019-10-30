@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: identities
+    foo.com/duversion: 2.18.2-20190910.1568137349404
+    foo.com/version: 2.18.2
+  labels:
+    app.kubernetes.io/name: identities
+    helm.sh/chart: identities-2.18.2
+  name: identities
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: identities
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: identities
+        app.kubernetes.io/name: identities
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-identities:2.18.2-20190910.1568137349404
+        imagePullPolicy: IfNotPresent
+        name: identities
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

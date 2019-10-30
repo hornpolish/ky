@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: themedesign
+    foo.com/duversion: 3.5.106-20190925.1569388169161
+    foo.com/version: 3.5.106
+  labels:
+    app.kubernetes.io/name: foothemedesigner
+    helm.sh/chart: foothemedesigner-3.5.106
+  name: foothemedesigner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: foothemedesigner
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: foothemedesigner
+        app.kubernetes.io/name: foothemedesigner
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-foothemedesigner:3.5.106-20190925.1569388169161
+        imagePullPolicy: IfNotPresent
+        name: foothemedesigner
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

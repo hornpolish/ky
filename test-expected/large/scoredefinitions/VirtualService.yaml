@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: scoredefntn
+    foo.com/duversion: 2.12.54-20190924.1569361081794
+    foo.com/version: 2.12.54
+  labels:
+    app.kubernetes.io/name: scoredefinitions
+    helm.sh/chart: scoredefinitions-2.12.54
+  name: scoredefinitions
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /scoreDefinitions
+    - uri:
+        prefix: /scoreDefinitions/
+    route:
+    - destination:
+        host: scoredefinitions.peekay.svc.cluster.local

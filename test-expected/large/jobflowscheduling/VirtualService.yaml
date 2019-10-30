@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: jobflowsch
+    foo.com/duversion: 2.0.22-20190919.1568901154700
+    foo.com/version: 2.0.22
+  labels:
+    app.kubernetes.io/name: jobflowscheduling
+    helm.sh/chart: jobflowscheduling-2.0.22
+  name: jobflowscheduling
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /jobFlowScheduling
+    - uri:
+        prefix: /jobFlowScheduling/
+    route:
+    - destination:
+        host: jobflowscheduling.peekay.svc.cluster.local

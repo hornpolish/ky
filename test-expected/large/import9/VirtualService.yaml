@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: import9
+    foo.com/duversion: 1.0.5-20190910.1568120211560
+    foo.com/version: 1.0.5
+  labels:
+    app.kubernetes.io/name: import9
+    helm.sh/chart: import9-1.0.5
+  name: import9
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /import9
+    - uri:
+        prefix: /import9/
+    route:
+    - destination:
+        host: import9.peekay.svc.cluster.local

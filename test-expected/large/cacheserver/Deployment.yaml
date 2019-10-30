@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: cacheserver
+    foo.com/duversion: 1.2.11-20190909.1568059642843
+    foo.com/version: 1.2.11
+  labels:
+    app.kubernetes.io/name: cacheserver
+    helm.sh/chart: cacheserver-1.2.11
+  name: cacheserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cacheserver
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: cacheserver
+        app.kubernetes.io/name: cacheserver
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTION_FOO_CACHE_SERVER_PORT
+          value: -Dfoo.cache.server.port=40404
+        - name: JAVA_OPTION_FOO_CACHE_SERVER_HOSTNAMEFORCLIENTS
+          value: -Dfoo.cache.server.hostnameForClients=cacheserver.peekay.svc.cluster.local
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/vcmnfnd-135.0.0-x64_redhat_linux_7-docker-prod/foo-cacheserver:1.2.11-20190909.1568059642843
+        imagePullPolicy: IfNotPresent
+        name: cacheserver
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 40404
+          name: cacheserver
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

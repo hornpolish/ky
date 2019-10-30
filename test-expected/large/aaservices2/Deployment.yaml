@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: aaservices2
+    foo.com/duversion: 1.1.55-20190924.1569367447223
+    foo.com/version: 1.1.55
+  labels:
+    app.kubernetes.io/name: aaservices2
+    helm.sh/chart: aaservices2-1.1.55
+  name: aaservices2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: aaservices2
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: aaservices2
+        app.kubernetes.io/name: aaservices2
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        - name: FOO_ANALYTICSEVENTS_SERVER_PORT
+          value: "8081"
+        - name: FOO_ANALYTICSGATEWAY_SERVER_PORT
+          value: "8082"
+        - name: FOO_ANALYTICSLOCALIZATION_SERVER_PORT
+          value: "8083"
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-analytics-services2:1.1.55-20190924.1569367447223
+        imagePullPolicy: IfNotPresent
+        name: aaservices2
+        ports:
+        - containerPort: 8081
+          name: aaevents
+          protocol: TCP
+        - containerPort: 8082
+          name: aagateway
+          protocol: TCP
+        - containerPort: 8083
+          name: aacaploclztn
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

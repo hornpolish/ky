@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: thumbnails
+    foo.com/duversion: 1.2.382-20190925.1569390530243
+    foo.com/version: 1.2.382
+  labels:
+    app.kubernetes.io/name: thumbnails
+    helm.sh/chart: thumbnails-1.2.382
+  name: thumbnails
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thumbnails
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: thumbnails
+        app.kubernetes.io/name: thumbnails
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-thumbnails:1.2.382-20190925.1569390530243
+        imagePullPolicy: IfNotPresent
+        name: thumbnails
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

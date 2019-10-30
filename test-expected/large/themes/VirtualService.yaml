@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: themes
+    foo.com/duversion: 3.5.103-20190925.1569388185230
+    foo.com/version: 3.5.103
+  labels:
+    app.kubernetes.io/name: themes
+    helm.sh/chart: themes-3.5.103
+  name: themes
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /themes
+    - uri:
+        prefix: /themes/
+    route:
+    - destination:
+        host: themes.peekay.svc.cluster.local

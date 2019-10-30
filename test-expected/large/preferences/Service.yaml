@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: preferences
+    foo.com/duversion: 1.8.12-20190909.1568066319809
+    foo.com/version: 1.8.12
+  labels:
+    app.kubernetes.io/name: preferences
+    helm.sh/chart: preferences-1.8.12
+  name: preferences
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: preferences
+  type: ClusterIP

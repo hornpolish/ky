@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: themecontent
+    foo.com/duversion: 1.4.104-20190925.1569388178838
+    foo.com/version: 1.4.104
+  labels:
+    app.kubernetes.io/name: themecontent
+    helm.sh/chart: themecontent-1.4.104
+  name: themecontent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: themecontent
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: themecontent
+        app.kubernetes.io/name: themecontent
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-themecontent:1.4.104-20190925.1569388178838
+        imagePullPolicy: IfNotPresent
+        name: themecontent
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

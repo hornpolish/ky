@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: reportRenderer
+    foo.com/duversion: 1.13.79-20190925.1569390041779
+    foo.com/version: 1.13.79
+  labels:
+    app.kubernetes.io/name: reportrenderer
+    helm.sh/chart: reportrenderer-1.13.79
+  name: reportrenderer
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - name: cache1
+    port: 35001
+    targetPort: cache1
+  - name: cache2
+    port: 35002
+    targetPort: cache2
+  - name: cache3
+    port: 35003
+    targetPort: cache3
+  selector:
+    app.kubernetes.io/name: reportrenderer
+  type: ClusterIP

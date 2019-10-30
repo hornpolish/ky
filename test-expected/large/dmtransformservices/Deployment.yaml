@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dmtransformservices
+    foo.com/duversion: 2.7.97-20190924.1569376714624
+    foo.com/version: 2.7.97
+  labels:
+    app.kubernetes.io/name: dmtransformservices
+    helm.sh/chart: dmtransformservices-2.7.97
+  name: dmtransformservices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dmtransformservices
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: dmtransformservices
+        app.kubernetes.io/name: dmtransformservices
+    spec:
+      containers:
+      - env:
+        - name: FOO_TRANSFORMATIONS_SERVER_PORT
+          value: "8080"
+        - name: FOO_DATADISCOVERY_SERVER_PORT
+          value: "8081"
+        - name: FOO_DISCOVERYTABLEPROVIDER_SERVER_PORT
+          value: "8082"
+        - name: FOO_METADATA_SERVER_PORT
+          value: "8083"
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-dmtransformservices:2.7.97-20190924.1569376714624
+        imagePullPolicy: IfNotPresent
+        name: dmtransformservices
+        ports:
+        - containerPort: 8080
+          name: transformations
+          protocol: TCP
+        - containerPort: 8081
+          name: datadiscovery
+          protocol: TCP
+        - containerPort: 8082
+          name: dscvrytblprvdr
+          protocol: TCP
+        - containerPort: 8083
+          name: metadata
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: thumbnails
+    foo.com/duversion: 1.2.382-20190925.1569390530243
+    foo.com/version: 1.2.382
+  labels:
+    app.kubernetes.io/name: thumbnails
+    helm.sh/chart: thumbnails-1.2.382
+  name: thumbnails
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: thumbnails
+  type: ClusterIP

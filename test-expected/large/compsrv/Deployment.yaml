@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dkrcompsvr
+    foo.com/duversion: 0.17.0-20190924.1569321127401
+    foo.com/version: 0.17.0
+  labels:
+    app.kubernetes.io/name: compsrv
+    helm.sh/chart: compsrv-0.17.0
+  name: compsrv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: compsrv
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: compsrv
+        app.kubernetes.io/name: compsrv
+    spec:
+      containers:
+      - env:
+        - name: FOO_LAUNCHER_FOO_SERVICES_URL
+        - name: FOO_LAUNCHER_PORT_RANGE
+          value: 8088-8097
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-compute-server:0.17.0-20190924.1569321127401
+        imagePullPolicy: IfNotPresent
+        name: compsrv
+        ports:
+        - containerPort: 8087
+          name: launcher
+        - containerPort: 8088
+          name: compute1
+        - containerPort: 8089
+          name: compute2
+        - containerPort: 8090
+          name: compute3
+        - containerPort: 8091
+          name: compute4
+        - containerPort: 8092
+          name: compute5
+        - containerPort: 8093
+          name: compute6
+        - containerPort: 8094
+          name: compute7
+        - containerPort: 8095
+          name: compute8
+        - containerPort: 8096
+          name: compute9
+        - containerPort: 8097
+          name: compute10
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/sss
+          name: sss
+      - image: docker.foo.com/kegaha/sssd:test
+        name: kegaha-sssd
+        volumeMounts:
+        - mountPath: /etc/sssd
+          name: sssd-config
+        - mountPath: /var/lib/sss
+          name: sss
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker
+      - command:
+        - bash
+        - -c
+        - cp -avR /var/lib/sss/* /data/
+        image: docker.foo.com/kegaha/sssd:test
+        name: sssd-init
+        volumeMounts:
+        - mountPath: /data
+          name: sss
+      volumes:
+      - emptyDir: {}
+        name: sss
+      - configMap:
+          items:
+          - key: SSSD_CONF
+            mode: 384
+            path: sssd.conf
+          name: foo-sssd-config
+        name: sssd-config

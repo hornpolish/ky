@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: reportRenderer
+    foo.com/duversion: 1.13.79-20190925.1569390041779
+    foo.com/version: 1.13.79
+  labels:
+    app.kubernetes.io/name: reportrenderer
+    helm.sh/chart: reportrenderer-1.13.79
+  name: reportrenderer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reportrenderer
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: reportrenderer
+        app.kubernetes.io/name: reportrenderer
+    spec:
+      containers:
+      - env:
+        - name: FOO_CACHE_CONFIG_MEMBERSHIPPORTRANGE
+          value: 35001-35003
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-report-renderer:1.13.79-20190925.1569390041779
+        imagePullPolicy: IfNotPresent
+        name: reportrenderer
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 35001
+          name: cache1
+        - containerPort: 35002
+          name: cache2
+        - containerPort: 35003
+          name: cache3
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

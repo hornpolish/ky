@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+data:
+  CONSUL_HTTP_ADDR: http://consul:8500
+  OAUTH2_ADMINID: foo.admin
+  OAUTH2_ADMINSECRET: foo.admin.secret
+  FOO_DATABASE_DATABASE: SharedServices
+  FOO_LOG_FORMAT: pretty
+  FOO_LOG_LEVEL: debug
+kind: ConfigMap
+metadata:
+  name: foo-go-config

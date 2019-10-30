@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: appregistry
+    foo.com/duversion: 1.9.396-20190925.1569389375690
+    foo.com/version: 1.9.396
+  labels:
+    app.kubernetes.io/name: appregistry
+    helm.sh/chart: appregistry-1.9.396
+  name: appregistry
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: appregistry
+  type: ClusterIP

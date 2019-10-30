@@ -1,0 +1,64 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: datamining
+    foo.com/duversion: 39.0.33-20190921.1569051370019
+    foo.com/version: 39.0.33
+  labels:
+    app.kubernetes.io/name: datamining
+    helm.sh/chart: datamining-39.0.33
+  name: datamining
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: datamining
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: datamining
+        app.kubernetes.io/name: datamining
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        - name: FOO_DATAMININGWAREHOUSE_SERVER_PORT
+          value: "8081"
+        - name: FOO_DATAMININGMODELS_SERVER_PORT
+          value: "8082"
+        - name: FOO_DATAMININGPROJECTSETTINGS_SERVER_PORT
+          value: "8083"
+        - name: FOO_DATAMINING_SERVER_PORT
+          value: "8084"
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-data-mining:39.0.33-20190921.1569051370019
+        imagePullPolicy: IfNotPresent
+        name: datamining
+        ports:
+        - containerPort: 8081
+          name: dminewh
+          protocol: TCP
+        - containerPort: 8082
+          name: dminemodels
+          protocol: TCP
+        - containerPort: 8083
+          name: dminesettings
+          protocol: TCP
+        - containerPort: 8084
+          name: dmine
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

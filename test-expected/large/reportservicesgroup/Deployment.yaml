@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: reportservicesgroup
+    foo.com/duversion: 1.0.40-20190925.1569390513080
+    foo.com/version: 1.0.40
+  labels:
+    app.kubernetes.io/name: reportservicesgroup
+    helm.sh/chart: reportservicesgroup-1.0.40
+  name: reportservicesgroup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reportservicesgroup
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: reportservicesgroup
+        app.kubernetes.io/name: reportservicesgroup
+    spec:
+      containers:
+      - env:
+        - name: FOO_REPORTS_SERVER_PORT
+          value: "8080"
+        - name: FOO_REPORTALERTS_SERVER_PORT
+          value: "8081"
+        - name: FOO_REPORTIMAGES_SERVER_PORT
+          value: "8082"
+        - name: FOO_REPORTTEMPLATES_SERVER_PORT
+          value: "8083"
+        - name: FOO_REPORTTRANSFORMS_SERVER_PORT
+          value: "8084"
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-reportservicesgroup:1.0.40-20190925.1569390513080
+        imagePullPolicy: IfNotPresent
+        name: reportservicesgroup
+        ports:
+        - containerPort: 8080
+          name: reports
+          protocol: TCP
+        - containerPort: 8081
+          name: reportalerts
+          protocol: TCP
+        - containerPort: 8082
+          name: reportimages
+          protocol: TCP
+        - containerPort: 8083
+          name: reporttemplates
+          protocol: TCP
+        - containerPort: 8084
+          name: reporttransform
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

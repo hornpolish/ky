@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: dmdplin
+    foo.com/duversion: 1.7.97-20190924.1569378293749
+    foo.com/version: 1.7.97
+  labels:
+    app.kubernetes.io/name: foolineage
+    helm.sh/chart: foolineage-1.7.97
+  name: foolineage
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: foolineage
+  type: ClusterIP

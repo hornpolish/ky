@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: comments
+    foo.com/duversion: 2.6.16-20190917.1568709087672
+    foo.com/version: 2.6.16
+  labels:
+    app.kubernetes.io/name: comments
+    helm.sh/chart: comments-2.6.16
+  name: comments
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /comments
+    - uri:
+        prefix: /comments/
+    route:
+    - destination:
+        host: comments.peekay.svc.cluster.local

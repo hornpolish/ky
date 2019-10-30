@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: graphbuilder
+    foo.com/duversion: 1.8.84-20190925.1569390540963
+    foo.com/version: 1.8.84
+  labels:
+    app.kubernetes.io/name: foographbuilder
+    helm.sh/chart: foographbuilder-1.8.84
+  name: foographbuilder
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /FOOGraphBuilder
+    - uri:
+        prefix: /FOOGraphBuilder/
+    route:
+    - destination:
+        host: foographbuilder.peekay.svc.cluster.local

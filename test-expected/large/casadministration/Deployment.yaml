@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: cas-administration
+    foo.com/duversion: 1.1.8-20190924.1569378146973
+    foo.com/version: 1.1.8
+  labels:
+    app.kubernetes.io/name: casadministration
+    helm.sh/chart: casadministration-1.1.8
+  name: casadministration
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: casadministration
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: casadministration
+        app.kubernetes.io/name: casadministration
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        - name: FOO_CASMANAGEMENT_SERVER_PORT
+          value: "8082"
+        - name: FOO_CASPROXY_SERVER_PORT
+          value: "8081"
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-cas-administration:1.1.8-20190924.1569378146973
+        imagePullPolicy: IfNotPresent
+        name: casadministration
+        ports:
+        - containerPort: 8082
+          name: casmanagement
+          protocol: TCP
+        - containerPort: 8081
+          name: casproxy
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: links
+    foo.com/duversion: 1.9.384-20190925.1569389392426
+    foo.com/version: 1.9.384
+  labels:
+    app.kubernetes.io/name: links
+    helm.sh/chart: links-1.9.384
+  name: links
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /links
+    - uri:
+        prefix: /links/
+    route:
+    - destination:
+        host: links.peekay.svc.cluster.local

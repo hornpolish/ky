@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: caslicense
+    foo.com/duversion: 1.5.9-20190923.1569266217446
+    foo.com/version: 1.5.9
+  labels:
+    app.kubernetes.io/name: licenses
+    helm.sh/chart: licenses-1.5.9
+  name: licenses
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /licenses
+    - uri:
+        prefix: /licenses/
+    route:
+    - destination:
+        host: licenses.peekay.svc.cluster.local

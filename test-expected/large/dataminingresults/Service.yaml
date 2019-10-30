@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: mnresults
+    foo.com/duversion: 22.11.49-20190921.1569051170585
+    foo.com/version: 22.11.49
+  labels:
+    app.kubernetes.io/name: dataminingresults
+    helm.sh/chart: dataminingresults-22.11.49
+  name: dataminingresults
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: dataminingresults
+  type: ClusterIP

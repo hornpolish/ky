@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: logon
+    foo.com/duversion: 2.21.0-20190909.1568065315744
+    foo.com/version: 2.21.0
+  labels:
+    app.kubernetes.io/name: foologon
+    helm.sh/chart: foologon-2.21.0
+  name: foologon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: foologon
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: foologon
+        app.kubernetes.io/name: foologon
+    spec:
+      containers:
+      - env:
+        - name: FOO_LOGON_INITIAL_USER
+          value: fooboot
+        - name: FOO_LOGON_INITIAL_PASSWORD
+          value: fooboot.secret
+        - name: FOO_CACHE_CONFIG_MEMBERSHIPPORTRANGE
+          value: 35001-35003
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-foologon:2.21.0-20190909.1568065315744
+        imagePullPolicy: IfNotPresent
+        name: foologon
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 35001
+          name: cache1
+        - containerPort: 35002
+          name: cache2
+        - containerPort: 35003
+          name: cache3
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: crossdmnprxy
+    foo.com/duversion: 1.4.6-20190809.1565377922688
+    foo.com/version: 1.4.6
+  labels:
+    app.kubernetes.io/name: crossdomainproxy
+    helm.sh/chart: crossdomainproxy-1.4.6
+  name: crossdomainproxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: crossdomainproxy
+  type: ClusterIP

@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: naturalLanguageGeneration
+    foo.com/duversion: 1.2.8-20190918.1568856760889
+    foo.com/version: 1.2.8
+  labels:
+    app.kubernetes.io/name: naturallanguagegeneration
+    helm.sh/chart: naturallanguagegeneration-1.2.8
+  name: naturallanguagegeneration
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: naturallanguagegeneration
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: naturallanguagegeneration
+        app.kubernetes.io/name: naturallanguagegeneration
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-naturallanguagegeneration:1.2.8-20190918.1568856760889
+        imagePullPolicy: IfNotPresent
+        name: naturallanguagegeneration
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

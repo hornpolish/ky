@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: relationships
+    foo.com/duversion: 3.8.12-20190909.1568066843698
+    foo.com/version: 3.8.12
+  labels:
+    app.kubernetes.io/name: relationships
+    helm.sh/chart: relationships-3.8.12
+  name: relationships
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: relationships
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: relationships
+        app.kubernetes.io/name: relationships
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-relationships:3.8.12-20190909.1568066843698
+        imagePullPolicy: IfNotPresent
+        name: relationships
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

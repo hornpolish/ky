@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dmdpstu
+    foo.com/duversion: 1.5.91-20190924.1569379814245
+    foo.com/version: 1.5.91
+  labels:
+    app.kubernetes.io/name: foodatastudio
+    helm.sh/chart: foodatastudio-1.5.91
+  name: foodatastudio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: foodatastudio
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: foodatastudio
+        app.kubernetes.io/name: foodatastudio
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-datastudio:1.5.91-20190924.1569379814245
+        imagePullPolicy: IfNotPresent
+        name: foodatastudio
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

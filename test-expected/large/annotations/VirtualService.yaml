@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: annotations
+    foo.com/duversion: 2.1.8-20190909.1568058091450
+    foo.com/version: 2.1.8
+  labels:
+    app.kubernetes.io/name: annotations
+    helm.sh/chart: annotations-2.1.8
+  name: annotations
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /annotations
+    - uri:
+        prefix: /annotations/
+    route:
+    - destination:
+        host: annotations.peekay.svc.cluster.local

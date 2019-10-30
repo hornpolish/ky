@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: foldersrvc
+    foo.com/duversion: 2.16.5-20190909.1568063600056
+    foo.com/version: 2.16.5
+  labels:
+    app.kubernetes.io/name: folders
+    helm.sh/chart: folders-2.16.5
+  name: folders
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /folders
+    - uri:
+        prefix: /folders/
+    route:
+    - destination:
+        host: folders.peekay.svc.cluster.local

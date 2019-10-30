@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: scoreexecutn
+    foo.com/duversion: 2.11.55-20190924.1569361127727
+    foo.com/version: 2.11.55
+  labels:
+    app.kubernetes.io/name: scoreexecution
+    helm.sh/chart: scoreexecution-2.11.55
+  name: scoreexecution
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: scoreexecution
+  type: ClusterIP

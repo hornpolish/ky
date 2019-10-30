@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: cacheserver
+    foo.com/duversion: 1.2.11-20190909.1568059642843
+    foo.com/version: 1.2.11
+  labels:
+    app.kubernetes.io/name: cacheserver
+    helm.sh/chart: cacheserver-1.2.11
+  name: cacheserver
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /cacheserver
+    - uri:
+        prefix: /cacheserver/
+    route:
+    - destination:
+        host: cacheserver.peekay.svc.cluster.local

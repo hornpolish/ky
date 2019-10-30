@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: relationships
+    foo.com/duversion: 3.8.12-20190909.1568066843698
+    foo.com/version: 3.8.12
+  labels:
+    app.kubernetes.io/name: relationships
+    helm.sh/chart: relationships-3.8.12
+  name: relationships
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /relationships
+    - uri:
+        prefix: /relationships/
+    route:
+    - destination:
+        host: relationships.peekay.svc.cluster.local

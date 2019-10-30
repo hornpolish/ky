@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: projects
+    foo.com/duversion: 1.5.19-20190924.1569335924657
+    foo.com/version: 1.5.19
+  labels:
+    app.kubernetes.io/name: projects
+    helm.sh/chart: projects-1.5.19
+  name: projects
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /projects
+    - uri:
+        prefix: /projects/
+    route:
+    - destination:
+        host: projects.peekay.svc.cluster.local

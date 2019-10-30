@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: modelpublish
+    foo.com/duversion: 2.14.6-20190818.1566162853897
+    foo.com/version: 2.14.6
+  labels:
+    app.kubernetes.io/name: modelpublish
+    helm.sh/chart: modelpublish-2.14.6
+  name: modelpublish
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: modelpublish
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: modelpublish
+        app.kubernetes.io/name: modelpublish
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-modelpublish:2.14.6-20190818.1566162853897
+        imagePullPolicy: IfNotPresent
+        name: modelpublish
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

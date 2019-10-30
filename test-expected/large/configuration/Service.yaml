@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: configuratn
+    foo.com/duversion: 1.32.9-20190909.1568062554716
+    foo.com/version: 1.32.9
+  labels:
+    app.kubernetes.io/name: configuration
+    helm.sh/chart: configuration-1.32.9
+  name: configuration
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: configuration
+  type: ClusterIP

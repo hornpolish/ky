@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: modelpublish
+    foo.com/duversion: 2.14.6-20190818.1566162853897
+    foo.com/version: 2.14.6
+  labels:
+    app.kubernetes.io/name: modelpublish
+    helm.sh/chart: modelpublish-2.14.6
+  name: modelpublish
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /modelPublish
+    - uri:
+        prefix: /modelPublish/
+    route:
+    - destination:
+        host: modelpublish.peekay.svc.cluster.local

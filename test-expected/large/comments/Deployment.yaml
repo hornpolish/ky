@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: comments
+    foo.com/duversion: 2.6.16-20190917.1568709087672
+    foo.com/version: 2.6.16
+  labels:
+    app.kubernetes.io/name: comments
+    helm.sh/chart: comments-2.6.16
+  name: comments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: comments
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: comments
+        app.kubernetes.io/name: comments
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-comments:2.6.16-20190917.1568709087672
+        imagePullPolicy: IfNotPresent
+        name: comments
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

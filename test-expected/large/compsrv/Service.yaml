@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: dkrcompsvr
+    foo.com/duversion: 0.17.0-20190924.1569321127401
+    foo.com/version: 0.17.0
+  labels:
+    app.kubernetes.io/name: compsrv
+    helm.sh/chart: compsrv-0.17.0
+  name: compsrv
+spec:
+  ports:
+  - name: launcher
+    port: 8087
+    targetPort: launcher
+  - name: compute1
+    port: 8088
+    targetPort: compute1
+  - name: compute2
+    port: 8089
+    targetPort: compute2
+  - name: compute3
+    port: 8090
+    targetPort: compute3
+  - name: compute4
+    port: 8091
+    targetPort: compute4
+  - name: compute5
+    port: 8092
+    targetPort: compute5
+  - name: compute6
+    port: 8093
+    targetPort: compute6
+  - name: compute7
+    port: 8094
+    targetPort: compute7
+  - name: compute8
+    port: 8095
+    targetPort: compute8
+  - name: compute9
+    port: 8096
+    targetPort: compute9
+  - name: compute10
+    port: 8097
+    targetPort: compute10
+  selector:
+    app.kubernetes.io/name: compsrv
+  type: ClusterIP

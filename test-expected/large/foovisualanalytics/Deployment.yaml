@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: vanalytics
+    foo.com/duversion: 2.2.58-20190925.1569390609824
+    foo.com/version: 2.2.58
+  labels:
+    app.kubernetes.io/name: foovisualanalytics
+    helm.sh/chart: foovisualanalytics-2.2.58
+  name: foovisualanalytics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: foovisualanalytics
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: foovisualanalytics
+        app.kubernetes.io/name: foovisualanalytics
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-foovisualanalytics:2.2.58-20190925.1569390609824
+        imagePullPolicy: IfNotPresent
+        name: foovisualanalytics
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dkrrabbitmq
+    foo.com/duversion: 3.7.110004-20190924.1569322687372
+    foo.com/version: 3.7.110004
+  labels:
+    app.kubernetes.io/name: rabbitmq
+    helm.sh/chart: rabbitmq-3.7.110004
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rabbitmq
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: rabbitmq
+        app.kubernetes.io/name: rabbitmq
+    spec:
+      containers:
+      - env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-rabbitmq-server:3.7.110004-20190924.1569322687372
+        imagePullPolicy: IfNotPresent
+        name: rabbitmq
+        ports:
+        - containerPort: 5672
+          name: amqp
+          protocol: TCP
+        - containerPort: 15672
+          name: management
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /rabbitmq/data
+          name: foo-viya-rabbitmq-data-volume
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker
+      volumes:
+      - name: foo-viya-rabbitmq-data-volume
+        persistentVolumeClaim:
+          claimName: rabbitmq

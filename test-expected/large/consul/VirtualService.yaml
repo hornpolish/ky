@@ -1,0 +1,23 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: dkrconsul
+    foo.com/duversion: 1.0.10-20190924.1569322386727
+    foo.com/version: 1.0.10
+  labels:
+    app.kubernetes.io/name: consul
+    helm.sh/chart: consul-1.0.10
+  name: consul
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - port: 8500
+    route:
+    - destination:
+        host: consul

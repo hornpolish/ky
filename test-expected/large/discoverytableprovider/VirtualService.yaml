@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: dmtransformservices
+    foo.com/duversion: 2.7.97-20190924.1569376714624
+    foo.com/version: 2.7.97
+  labels:
+    app.kubernetes.io/name: dmtransformservices
+    helm.sh/chart: dmtransformservices-2.7.97
+  name: discoverytableprovider
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /discoveryTableProvider
+    - uri:
+        prefix: /discoveryTableProvider/
+    route:
+    - destination:
+        host: discoverytableprovider.peekay.svc.cluster.local

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: notification
+    foo.com/duversion: 1.7.13-20190909.1568066006938
+    foo.com/version: 1.7.13
+  labels:
+    app.kubernetes.io/name: notifications
+    helm.sh/chart: notifications-1.7.13
+  name: notifications
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: notifications
+  type: ClusterIP

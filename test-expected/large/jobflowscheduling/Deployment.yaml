@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: jobflowsch
+    foo.com/duversion: 2.0.22-20190919.1568901154700
+    foo.com/version: 2.0.22
+  labels:
+    app.kubernetes.io/name: jobflowscheduling
+    helm.sh/chart: jobflowscheduling-2.0.22
+  name: jobflowscheduling
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jobflowscheduling
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: jobflowscheduling
+        app.kubernetes.io/name: jobflowscheduling
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-jobflowscheduling:2.0.22-20190919.1568901154700
+        imagePullPolicy: IfNotPresent
+        name: jobflowscheduling
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

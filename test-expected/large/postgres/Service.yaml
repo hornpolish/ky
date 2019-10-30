@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: dkrsdatasvr
+    foo.com/duversion: 11.4.250002-20190924.1569322027243
+    foo.com/version: 11.4.250002
+  labels:
+    app.kubernetes.io/name: postgres
+    helm.sh/chart: postgres-11.4.250002
+  name: postgres
+spec:
+  ports:
+  - name: db
+    port: 5432
+    targetPort: db
+  selector:
+    app.kubernetes.io/name: postgres
+  type: ClusterIP

@@ -1,0 +1,104 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dkrconsul
+    foo.com/duversion: 1.0.10-20190924.1569322386727
+    foo.com/version: 1.0.10
+  labels:
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: consul
+    helm.sh/chart: consul-1.0.9
+  name: consul
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: consul
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: consul
+        app.kubernetes.io/name: consul
+    spec:
+      containers:
+      - env:
+        - name: CONSUL_UI_FLAG
+          value: "true"
+        - name: CONSUL_BOOTSTRAP_EXPECT
+          value: "1"
+        - name: CONSUL_CLIENT_ADDRESS
+          value: 0.0.0.0
+        - name: CONSUL_DATACENTER_NAME
+          value: viya
+        - name: CONSUL_MANAGEMENT_TOKEN
+          value: tobeusedfordemoonlymgmt
+        - name: CONSUL_PORT_8500_TCP_ADDR
+          value: consul.peekay.svc.cluster.local
+        - name: CONSUL_PORT_8500_TCP_PORT
+          value: "8500"
+        - name: DISABLE_CONSUL_HTTP_PORT
+          value: "false"
+        - name: SECURE_CONSUL
+          value: "false"
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-consul-server:1.0.10-20190924.1569322386727
+        imagePullPolicy: IfNotPresent
+        name: consul
+        ports:
+        - containerPort: 8300
+          name: server
+        - containerPort: 8301
+          name: serflan-tcp
+          protocol: TCP
+        - containerPort: 8301
+          name: serflan-udp
+          protocol: UDP
+        - containerPort: 8302
+          name: serfwan-tcp
+          protocol: TCP
+        - containerPort: 8302
+          name: serfwan-udp
+          protocol: UDP
+        - containerPort: 8500
+          name: http
+        - containerPort: 8501
+          name: https
+        readinessProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /tmp/healthy
+          initialDelaySeconds: 45
+          periodSeconds: 30
+        resources: {}
+        volumeMounts:
+        - mountPath: /consul/data
+          name: foo-viya-consul-data-volume
+        - mountPath: /opt/foo/viya/config/etc/consul.d/default
+          name: sitedefault-vol
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker
+      volumes:
+      - name: foo-viya-consul-data-volume
+        persistentVolumeClaim:
+          claimName: consul
+      - configMap:
+          items:
+          - key: SITEDEFAULT_CONF
+            mode: 438
+            path: sitedefault.yml
+          name: foo-consul-config
+        name: sitedefault-vol

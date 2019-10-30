@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: drive
+    foo.com/duversion: 2.2.62-20190924.1569309523489
+    foo.com/version: 2.2.62
+  labels:
+    app.kubernetes.io/name: foodrive
+    helm.sh/chart: foodrive-2.2.62
+  name: foodrive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: foodrive
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: foodrive
+        app.kubernetes.io/name: foodrive
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-drive:2.2.62-20190924.1569309523489
+        imagePullPolicy: IfNotPresent
+        name: foodrive
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

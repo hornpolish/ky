@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: deviceManagement
+    foo.com/duversion: 1.9.388-20190925.1569389370463
+    foo.com/version: 1.9.388
+  labels:
+    app.kubernetes.io/name: devicemanagement
+    helm.sh/chart: devicemanagement-1.9.388
+  name: devicemanagement
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /deviceManagement
+    - uri:
+        prefix: /deviceManagement/
+    route:
+    - destination:
+        host: devicemanagement.peekay.svc.cluster.local

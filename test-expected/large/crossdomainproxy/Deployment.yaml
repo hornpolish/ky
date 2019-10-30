@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: crossdmnprxy
+    foo.com/duversion: 1.4.6-20190809.1565377922688
+    foo.com/version: 1.4.6
+  labels:
+    app.kubernetes.io/name: crossdomainproxy
+    helm.sh/chart: crossdomainproxy-1.4.6
+  name: crossdomainproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: crossdomainproxy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: crossdomainproxy
+        app.kubernetes.io/name: crossdomainproxy
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-crossdomainproxy:1.4.6-20190809.1565377922688
+        imagePullPolicy: IfNotPresent
+        name: crossdomainproxy
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

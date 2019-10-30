@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: geo-enhancement
+    foo.com/duversion: 1.6.7-20190923.1569266256796
+    foo.com/version: 1.6.7
+  labels:
+    app.kubernetes.io/name: geoenrichment
+    helm.sh/chart: geoenrichment-1.6.7
+  name: geoenrichment
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: geoenrichment
+  type: ClusterIP

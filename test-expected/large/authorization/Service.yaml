@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: authorizatn
+    foo.com/duversion: 3.13.2-20190910.1568136398941
+    foo.com/version: 3.13.2
+  labels:
+    app.kubernetes.io/name: authorization
+    helm.sh/chart: authorization-3.13.2
+  name: authorization
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: authorization
+  type: ClusterIP

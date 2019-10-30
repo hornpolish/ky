@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: reportpackages
+    foo.com/duversion: 1.11.79-20190925.1569390023868
+    foo.com/version: 1.11.79
+  labels:
+    app.kubernetes.io/name: reportpackages
+    helm.sh/chart: reportpackages-1.11.79
+  name: reportpackages
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /reportPackages
+    - uri:
+        prefix: /reportPackages/
+    route:
+    - destination:
+        host: reportpackages.peekay.svc.cluster.local

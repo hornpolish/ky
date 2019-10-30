@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: dmtransformservices
+    foo.com/duversion: 2.7.97-20190924.1569376714624
+    foo.com/version: 2.7.97
+  labels:
+    app.kubernetes.io/name: dmtransformservices
+    helm.sh/chart: dmtransformservices-2.7.97
+  name: datadiscovery
+spec:
+  ports:
+  - name: datadiscovery
+    port: 80
+    protocol: TCP
+    targetPort: datadiscovery
+  selector:
+    app.kubernetes.io/name: dmtransformservices
+  type: ClusterIP

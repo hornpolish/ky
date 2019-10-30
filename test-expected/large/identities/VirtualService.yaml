@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: identities
+    foo.com/duversion: 2.18.2-20190910.1568137349404
+    foo.com/version: 2.18.2
+  labels:
+    app.kubernetes.io/name: identities
+    helm.sh/chart: identities-2.18.2
+  name: identities
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /identities
+    - uri:
+        prefix: /identities/
+    route:
+    - destination:
+        host: identities.peekay.svc.cluster.local

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: relationships
+    foo.com/duversion: 3.8.12-20190909.1568066843698
+    foo.com/version: 3.8.12
+  labels:
+    app.kubernetes.io/name: relationships
+    helm.sh/chart: relationships-3.8.12
+  name: relationships
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: relationships
+  type: ClusterIP

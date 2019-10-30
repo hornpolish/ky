@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: links
+    foo.com/duversion: 1.9.384-20190925.1569389392426
+    foo.com/version: 1.9.384
+  labels:
+    app.kubernetes.io/name: links
+    helm.sh/chart: links-1.9.384
+  name: links
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: links
+  type: ClusterIP

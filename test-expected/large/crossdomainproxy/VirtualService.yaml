@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: crossdmnprxy
+    foo.com/duversion: 1.4.6-20190809.1565377922688
+    foo.com/version: 1.4.6
+  labels:
+    app.kubernetes.io/name: crossdomainproxy
+    helm.sh/chart: crossdomainproxy-1.4.6
+  name: crossdomainproxy
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /crossdomainproxy
+    - uri:
+        prefix: /crossdomainproxy/
+    route:
+    - destination:
+        host: crossdomainproxy.peekay.svc.cluster.local

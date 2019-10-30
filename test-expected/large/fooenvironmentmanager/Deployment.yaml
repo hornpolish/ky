@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: envmgr-app
+    foo.com/duversion: 3.3.150-20190924.1569381612463
+    foo.com/version: 3.3.150
+  labels:
+    app.kubernetes.io/name: fooenvironmentmanager
+    helm.sh/chart: fooenvironmentmanager-3.3.150
+  name: fooenvironmentmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fooenvironmentmanager
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: fooenvironmentmanager
+        app.kubernetes.io/name: fooenvironmentmanager
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/va-125.0.0-x64_redhat_linux_7-docker-prod/foo-environmentmanager:3.3.150-20190924.1569381612463
+        imagePullPolicy: IfNotPresent
+        name: fooenvironmentmanager
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

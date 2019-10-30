@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dkrsdatasvr
+    foo.com/duversion: 11.4.250002-20190924.1569322027243
+    foo.com/version: 11.4.250002
+  labels:
+    app.kubernetes.io/name: postgres
+    helm.sh/chart: postgres-11.4.250002
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: postgres
+        app.kubernetes.io/name: postgres
+    spec:
+      containers:
+      - env:
+        - name: FOO_POSTGRES_DBSIZE
+          value: large
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dagent-125.0.0-x64_redhat_linux_7-docker-prod/foo-database-server:11.4.250002-20190924.1569322027243
+        imagePullPolicy: IfNotPresent
+        name: postgres
+        ports:
+        - containerPort: 5432
+          name: db
+        resources: {}
+        volumeMounts:
+        - mountPath: /opt/foo/viya/config/data/postgres
+          name: foo-viya-postgres-data-volume
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker
+      volumes:
+      - name: foo-viya-postgres-data-volume
+        persistentVolumeClaim:
+          claimName: postgres

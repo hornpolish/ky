@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: scheduler
+    foo.com/duversion: 3.6.33-20190820.1566264420533
+    foo.com/version: 3.6.33
+  labels:
+    app.kubernetes.io/name: scheduler
+    helm.sh/chart: scheduler-3.6.33
+  name: scheduler
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /scheduler
+    - uri:
+        prefix: /scheduler/
+    route:
+    - destination:
+        host: scheduler.peekay.svc.cluster.local

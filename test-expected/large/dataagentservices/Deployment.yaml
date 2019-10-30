@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dataagentservices
+    foo.com/duversion: 1.2.45-20190924.1569376755793
+    foo.com/version: 1.2.45
+  labels:
+    app.kubernetes.io/name: dataagentservices
+    helm.sh/chart: dataagentservices-1.2.45
+  name: dataagentservices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dataagentservices
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: dataagentservices
+        app.kubernetes.io/name: dataagentservices
+    spec:
+      containers:
+      - env:
+        - name: FOO_DATAAGENTCONTENT_SERVER_PORT
+          value: "8091"
+        - name: FOO_DATAAGENTMANAGEMENT_SERVER_PORT
+          value: "8092"
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-dataagentservices:1.2.45-20190924.1569376755793
+        imagePullPolicy: IfNotPresent
+        name: dataagentservices
+        ports:
+        - containerPort: 8091
+          name: dagentcont
+          protocol: TCP
+        - containerPort: 8092
+          name: dagentmgmt
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

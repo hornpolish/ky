@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: scoreexecutn
+    foo.com/duversion: 2.11.55-20190924.1569361127727
+    foo.com/version: 2.11.55
+  labels:
+    app.kubernetes.io/name: scoreexecution
+    helm.sh/chart: scoreexecution-2.11.55
+  name: scoreexecution
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /scoreExecution
+    - uri:
+        prefix: /scoreExecution/
+    route:
+    - destination:
+        host: scoreexecution.peekay.svc.cluster.local

@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dqsvc
+    foo.com/duversion: 2.4.86-20190924.1569376639635
+    foo.com/version: 2.4.86
+  labels:
+    app.kubernetes.io/name: dataquality
+    helm.sh/chart: dataquality-2.4.86
+  name: dataquality
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dataquality
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: dataquality
+        app.kubernetes.io/name: dataquality
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdq-125.0.0-x64_redhat_linux_7-docker-prod/foo-dataquality:2.4.86-20190924.1569376639635
+        imagePullPolicy: IfNotPresent
+        name: dataquality
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

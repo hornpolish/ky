@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: dataagentservices
+    foo.com/duversion: 1.2.45-20190924.1569376755793
+    foo.com/version: 1.2.45
+  labels:
+    app.kubernetes.io/name: dataagentservices
+    helm.sh/chart: dataagentservices-1.2.45
+  name: dataagentcontent
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /dataAgentContent
+    - uri:
+        prefix: /dataAgentContent/
+    route:
+    - destination:
+        host: dataagentcontent.peekay.svc.cluster.local

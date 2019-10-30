@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: foostudiov
+    foo.com/duversion: 5.2.177-20190925.1569390411032
+    foo.com/version: 5.2.177
+  labels:
+    app.kubernetes.io/name: foostudiov
+    helm.sh/chart: foostudiov-5.2.177
+  name: foostudiov
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: foostudiov
+  type: ClusterIP

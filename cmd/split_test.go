@@ -9,7 +9,7 @@ import (
 func compareTwo(t *testing.T, file string) {
 	cmp := equalfile.New(nil, equalfile.Options{}) // compare using single mode
 
-	equal, err := cmp.CompareFile("../test-output/"+file, "../test-result/"+file)
+	equal, err := cmp.CompareFile("../test-output/"+file, "../test-expected/"+file)
 
 	if err != nil {
 		t.Fail()
@@ -62,4 +62,13 @@ func TestSplitLarge(t *testing.T) {
 	arg[0] = "../test/large.yaml"
 
 	Split(arg)
+
+	//TODO compare the ./large folder recursively!
+	compareTwo(t, "large/files/Deployment.yaml")
+	compareTwo(t, "large/files/Service.yaml")
+	compareTwo(t, "large/files/VirtualService.yaml")
+
+	compareTwo(t, "large/folders/Deployment.yaml")
+	compareTwo(t, "large/folders/Service.yaml")
+	compareTwo(t, "large/folders/VirtualService.yaml")
 }

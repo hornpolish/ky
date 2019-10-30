@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: caslicense
+    foo.com/duversion: 1.5.9-20190923.1569266217446
+    foo.com/version: 1.5.9
+  labels:
+    app.kubernetes.io/name: licenses
+    helm.sh/chart: licenses-1.5.9
+  name: licenses
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: licenses
+  type: ClusterIP

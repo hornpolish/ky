@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: qkbadminsvc
+    foo.com/duversion: 2.4.86-20190924.1569376632890
+    foo.com/version: 2.4.86
+  labels:
+    app.kubernetes.io/name: qkbmanagement
+    helm.sh/chart: qkbmanagement-2.4.86
+  name: qkbmanagement
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /qkbManagement
+    - uri:
+        prefix: /qkbManagement/
+    route:
+    - destination:
+        host: qkbmanagement.peekay.svc.cluster.local

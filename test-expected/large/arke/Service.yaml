@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: arke
+    foo.com/duversion: 0.1.5-20190911.1568211757
+    foo.com/version: 0.1.5
+  labels:
+    app.kubernetes.io/name: arke
+    helm.sh/chart: arke-0.1.5
+  name: arke
+spec:
+  ports:
+  - name: tcp
+    port: 50051
+    protocol: TCP
+    targetPort: 50051
+  selector:
+    app.kubernetes.io/name: arke
+  type: ClusterIP

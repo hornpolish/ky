@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: annotations
+    foo.com/duversion: 2.1.8-20190909.1568058091450
+    foo.com/version: 2.1.8
+  labels:
+    app.kubernetes.io/name: annotations
+    helm.sh/chart: annotations-2.1.8
+  name: annotations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: annotations
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: annotations
+        app.kubernetes.io/name: annotations
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-annotations:2.1.8-20190909.1568058091450
+        imagePullPolicy: IfNotPresent
+        name: annotations
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

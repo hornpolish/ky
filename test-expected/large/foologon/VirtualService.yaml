@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: logon
+    foo.com/duversion: 2.21.0-20190909.1568065315744
+    foo.com/version: 2.21.0
+  labels:
+    app.kubernetes.io/name: foologon
+    helm.sh/chart: foologon-2.21.0
+  name: foologon
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /FOOLogon
+    - uri:
+        prefix: /FOOLogon/
+    route:
+    - destination:
+        host: foologon.peekay.svc.cluster.local

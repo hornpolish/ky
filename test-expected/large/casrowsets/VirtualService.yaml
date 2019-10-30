@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: cas-row-sets
+    foo.com/duversion: 2.5.12-20190923.1569266193622
+    foo.com/version: 2.5.12
+  labels:
+    app.kubernetes.io/name: casrowsets
+    helm.sh/chart: casrowsets-2.5.12
+  name: casrowsets
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /casRowSets
+    - uri:
+        prefix: /casRowSets/
+    route:
+    - destination:
+        host: casrowsets.peekay.svc.cluster.local

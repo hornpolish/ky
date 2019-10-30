@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: caslicense
+    foo.com/duversion: 1.5.9-20190923.1569266217446
+    foo.com/version: 1.5.9
+  labels:
+    app.kubernetes.io/name: licenses
+    helm.sh/chart: licenses-1.5.9
+  name: licenses
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: licenses
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: licenses
+        app.kubernetes.io/name: licenses
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-cas-license:1.5.9-20190923.1569266217446
+        imagePullPolicy: IfNotPresent
+        name: licenses
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

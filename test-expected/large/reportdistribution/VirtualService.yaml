@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: reportdistribution
+    foo.com/duversion: 2.7.76-20190925.1569390025144
+    foo.com/version: 2.7.76
+  labels:
+    app.kubernetes.io/name: reportdistribution
+    helm.sh/chart: reportdistribution-2.7.76
+  name: reportdistribution
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /reportDistribution
+    - uri:
+        prefix: /reportDistribution/
+    route:
+    - destination:
+        host: reportdistribution.peekay.svc.cluster.local

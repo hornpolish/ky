@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: configuratn
+    foo.com/duversion: 1.32.9-20190909.1568062554716
+    foo.com/version: 1.32.9
+  labels:
+    app.kubernetes.io/name: configuration
+    helm.sh/chart: configuration-1.32.9
+  name: configuration
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: configuration
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: configuration
+        app.kubernetes.io/name: configuration
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/dmdatap-125.0.0-x64_redhat_linux_7-docker-prod/foo-configuration:1.32.9-20190909.1568062554716
+        imagePullPolicy: IfNotPresent
+        name: configuration
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

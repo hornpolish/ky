@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: dmdataservices
+    foo.com/duversion: 3.9.75-20190924.1569376667733
+    foo.com/version: 3.9.75
+  labels:
+    app.kubernetes.io/name: dmdataservices
+    helm.sh/chart: dmdataservices-3.9.75
+  name: datatables
+spec:
+  ports:
+  - name: datatables
+    port: 80
+    protocol: TCP
+    targetPort: datatables
+  selector:
+    app.kubernetes.io/name: dmdataservices
+  type: ClusterIP

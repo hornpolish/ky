@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: dkrcasall
+    foo.com/duversion: 1.1.0-20190924.1569321907045
+    foo.com/version: 1.1.0
+  labels:
+    app.kubernetes.io/name: dkrcasall
+    helm.sh/chart: dkrcasall-1.1.0
+  name: dkrcasall
+spec:
+  ports:
+  - name: http
+    port: 8777
+    protocol: TCP
+    targetPort: http
+  - name: binary
+    port: 5570
+    protocol: TCP
+    targetPort: binary
+  - name: gc
+    port: 5571
+    protocol: TCP
+    targetPort: gc
+  selector:
+    app.kubernetes.io/name: dkrcasall
+  type: ClusterIP

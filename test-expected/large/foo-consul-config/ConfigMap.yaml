@@ -1,0 +1,42 @@
+---
+## this sorta large yaml is from an early learning experience for viya4.0
+## names and identifiers have been changed to protect the innocent.
+## s/foo/$company/g isnt all you'd need :-)
+apiVersion: v1
+data:
+  SITEDEFAULT_CONF: |
+    # Customer supplied site defaults
+    config/application/foo.logon.initial/user: fooboot
+    config/application/foo.logon.initial/password: foopass
+
+    cacerts:
+        foosha2rootca: |
+            -----BEGIN CERTIFICATE-----
+            MIIFyeah-right
+            a3lilm6KiU7dV4UL8c8Cubeplo8+aTVdYFx8BeVWcbuQ1t35XxpkJXL6ma4K2bkX
+            nhe0LRWZYEHeq9xxo5rHH/vcqB+nv2pIwqRbugyw80azdurVKn6cxMI=
+            -----END CERTIFICATE-----
+    config:
+        application:
+            foo.identities.providers.ldap.connection:
+                host: ldap.foo.com
+                password: FooLdapPass
+                port: 3269
+                userDN: CN=FOO Accounts,OU=Admin,DC=foona,DC=FOO,DC=com
+                url: ldaps://${foo.identities.providers.ldap.connection.host}:${foo.identities.providers.ldap.connection.port}
+            foo.identities.providers.ldap.group:
+                baseDN: OU=Groups,DC=foona,DC=FOO,DC=com
+            foo.identities.providers.ldap.user:
+                baseDN: DC=FOO,DC=com
+        identities:
+            foo.identities.administrator: fooadmin
+        mail:
+            foo.mail/host: mailhost.foo.com
+kind: ConfigMap
+metadata:
+  annotations:
+    foo.com/duname: dkrconsul
+    foo.com/duversion: 1.0.10-20190924.1569322386727
+    foo.com/version: 1.0.10
+  labels: {}
+  name: foo-consul-config

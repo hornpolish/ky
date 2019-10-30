@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: themecontent
+    foo.com/duversion: 1.4.104-20190925.1569388178838
+    foo.com/version: 1.4.104
+  labels:
+    app.kubernetes.io/name: themecontent
+    helm.sh/chart: themecontent-1.4.104
+  name: themecontent
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /themeContent
+    - uri:
+        prefix: /themeContent/
+    route:
+    - destination:
+        host: themecontent.peekay.svc.cluster.local

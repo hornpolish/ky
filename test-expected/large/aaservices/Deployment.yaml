@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: aaservices
+    foo.com/duversion: 1.1.55-20190924.1569367446918
+    foo.com/version: 1.1.55
+  labels:
+    app.kubernetes.io/name: aaservices
+    helm.sh/chart: aaservices-1.1.55
+  name: aaservices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: aaservices
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: aaservices
+        app.kubernetes.io/name: aaservices
+    spec:
+      containers:
+      - env:
+        - name: JAVA_OPTION_CONSUL_INSTANCEID
+        - name: JAVA_OPTION_SERVER_PORT
+        - name: FOO_ANALYTICSDATASEGMENTATION_SERVER_PORT
+          value: "8081"
+        - name: FOO_ANALYTICSFLOWS_SERVER_PORT
+          value: "8082"
+        - name: FOO_ANALYTICSPIPELINES_SERVER_PORT
+          value: "8083"
+        - name: FOO_ANALYTICSVALIDATION_SERVER_PORT
+          value: "8084"
+        - name: FOO_ANALYTICSCOMPONENTS_SERVER_PORT
+          value: "8085"
+        envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        - configMapRef:
+            name: foo-java-config
+        image: repo.foo.com/mlrning-125.0.0-x64_redhat_linux_7-docker-prod/foo-analytics-services:1.1.55-20190924.1569367446918
+        imagePullPolicy: IfNotPresent
+        name: aaservices
+        ports:
+        - containerPort: 8081
+          name: aasegmentatn
+          protocol: TCP
+        - containerPort: 8082
+          name: aaflows
+          protocol: TCP
+        - containerPort: 8083
+          name: aapipelines
+          protocol: TCP
+        - containerPort: 8084
+          name: aavalidation
+          protocol: TCP
+        - containerPort: 8085
+          name: aacomponents
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker

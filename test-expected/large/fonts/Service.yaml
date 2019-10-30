@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: fonts
+    foo.com/duversion: 1.8.79-20190925.1569389381676
+    foo.com/version: 1.8.79
+  labels:
+    app.kubernetes.io/name: fonts
+    helm.sh/chart: fonts-1.8.79
+  name: fonts
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: fonts
+  type: ClusterIP

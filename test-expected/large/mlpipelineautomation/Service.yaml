@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: mlpipelineautomation
+    foo.com/duversion: 0.0.180-20190921.1569051268585
+    foo.com/version: 0.0.180
+  labels:
+    app.kubernetes.io/name: mlpipelineautomation
+    helm.sh/chart: mlpipelineautomation-0.0.180
+  name: mlpipelineautomation
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: mlpipelineautomation
+  type: ClusterIP

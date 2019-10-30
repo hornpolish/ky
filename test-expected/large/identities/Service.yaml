@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    foo.com/duname: identities
+    foo.com/duversion: 2.18.2-20190910.1568137349404
+    foo.com/version: 2.18.2
+  labels:
+    app.kubernetes.io/name: identities
+    helm.sh/chart: identities-2.18.2
+  name: identities
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: identities
+  type: ClusterIP

@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: maps
+    foo.com/duversion: 1.11.92-20190925.1569390023668
+    foo.com/version: 1.11.92
+  labels:
+    app.kubernetes.io/name: maps
+    helm.sh/chart: maps-1.11.92
+  name: maps
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /maps
+    - uri:
+        prefix: /maps/
+    route:
+    - destination:
+        host: maps.peekay.svc.cluster.local

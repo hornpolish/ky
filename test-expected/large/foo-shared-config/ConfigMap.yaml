@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+data:
+  CONSUL_HTTP_TOKEN: tobeusedfordemoonly
+  CONSUL_TOKEN: tobeusedfordemoonly
+  DISABLE_CONSUL_AGENT: "true"
+  RABBITMQ_PASSWORD: fooclientpw
+  RABBITMQ_USERNAME: fooclient
+  FOO_DATABASE_DATABASE: SharedServices
+  FOO_LICENSE: eyMoreJunkHere
+  FOO_MULTI_TENANCY_ENABLED: "false"
+  FOO_URL_RABBITMQ: amqp://rabbitmq:5672
+  FOO_URL_SERVICE_TEMPLATE: http://@service.name@
+  SPRING_DATASOURCE_PASSWORD: tobeusedfordemoonly
+  SPRING_DATASOURCE_USERNAME: dbmsowner
+kind: ConfigMap
+metadata:
+  annotations:
+    foo.com/duname: dkrconsul,dkrsdatasvr,dkrrabbitmq
+    foo.com/duversion: 1.0.10-20190924.1569322386727,11.4.250002-20190924.1569322027243,3.7.110004-20190924.1569322687372
+    foo.com/version: 1.0.10,11.4.250002,3.7.110004
+  name: foo-shared-config

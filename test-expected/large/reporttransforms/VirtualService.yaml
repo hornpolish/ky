@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: reportservicesgroup
+    foo.com/duversion: 1.0.40-20190925.1569390513080
+    foo.com/version: 1.0.40
+  labels:
+    app.kubernetes.io/name: reportservicesgroup
+    helm.sh/chart: reportservicesgroup-1.0.40
+  name: reporttransforms
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /reportTransforms
+    - uri:
+        prefix: /reportTransforms/
+    route:
+    - destination:
+        host: reporttransforms.peekay.svc.cluster.local

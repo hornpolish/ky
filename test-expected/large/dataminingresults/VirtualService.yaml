@@ -1,0 +1,26 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    foo.com/duname: mnresults
+    foo.com/duversion: 22.11.49-20190921.1569051170585
+    foo.com/version: 22.11.49
+  labels:
+    app.kubernetes.io/name: dataminingresults
+    helm.sh/chart: dataminingresults-22.11.49
+  name: dataminingresults
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /dataMiningResults
+    - uri:
+        prefix: /dataMiningResults/
+    route:
+    - destination:
+        host: dataminingresults.peekay.svc.cluster.local

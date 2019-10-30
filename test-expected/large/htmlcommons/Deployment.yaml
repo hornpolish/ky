@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    foo.com/duname: dkrhttpproxy
+    foo.com/duversion: 1.5.42-20190924.1569321426630
+    foo.com/version: 1.5.42
+  labels:
+    app.kubernetes.io/name: htmlcommons
+    helm.sh/chart: htmlcommons-1.5.42
+  name: htmlcommons
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: htmlcommons
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: htmlcommons
+        app.kubernetes.io/name: htmlcommons
+    spec:
+      containers:
+      - image: repo.foo.com/dagent-125.0.0-x64_redhat_linux_7-docker-prod/foo-httpproxy-server:1.5.42-20190924.1569321426630
+        imagePullPolicy: IfNotPresent
+        name: htmlcommons
+        ports:
+        - containerPort: 8080
+          name: http
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: foo-shared-config
+        image: docker.foo.com/yesbut/init-blocker:1.7
+        name: init-blocker
