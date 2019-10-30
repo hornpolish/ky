@@ -9,7 +9,7 @@ import (
 func compareTwo(t *testing.T, file string) {
 	cmp := equalfile.New(nil, equalfile.Options{}) // compare using single mode
 
-	equal, err := cmp.CompareFile("../test-output/"+file, "../test-expected/"+file)
+	equal, err := cmp.CompareFile("../test/output/"+file, "../test/expected/"+file)
 
 	if err != nil {
 		t.Fail()
@@ -22,7 +22,7 @@ func compareTwo(t *testing.T, file string) {
 func TestSplit(t *testing.T) {
 	arg := make([]string, 2)
 
-	splitVar.outdir = "../test-output"
+	splitVar.outdir = "../test/output"
 	splitVar.nname = false
 	arg[0] = "../test/fifo.yaml"
 	Split(arg)
@@ -39,7 +39,7 @@ func TestSplit(t *testing.T) {
 func TestSplitNest(t *testing.T) {
 	arg := make([]string, 2)
 
-	splitVar.outdir = "../test-output"
+	splitVar.outdir = "../test/output"
 	splitVar.nname = true
 	arg[0] = "../test/fifo.yaml"
 
@@ -57,7 +57,7 @@ func TestSplitNest(t *testing.T) {
 func TestSplitLarge(t *testing.T) {
 	arg := make([]string, 2)
 
-	splitVar.outdir = "../test-output/large"
+	splitVar.outdir = "../test/output/large"
 	splitVar.nname = true
 	arg[0] = "../test/large.yaml"
 

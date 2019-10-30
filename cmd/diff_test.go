@@ -30,7 +30,7 @@ func TestDiff(t *testing.T) {
 			continue
 		}
 
-		res := "../test-result/diff-" + tt.f1 + "-" + tt.f2
+		res := "../test/expected/diff-" + tt.f1 + "-" + tt.f2
 		want, err := ioutil.ReadFile(res)
 		if err != nil {
 			t.Errorf("diff %s-%s ReadFile(%s) failed.", tt.f1, tt.f2, res)

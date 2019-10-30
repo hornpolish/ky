@@ -19,7 +19,7 @@ build/
 split/
 
 # test-output is where the tests put stuff
-test-output/
+test/output/
 
 # Others
 .vscode/
