@@ -3,7 +3,6 @@ module github.com/hornpolish/ky
 go 1.12
 
 require (
-	github.com/jessevdk/go-flags v1.4.0 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kylelemons/godebug v1.1.0
 	github.com/logrusorgru/aurora v0.0.0-20190803045625-94edacc10f9b
