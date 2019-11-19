@@ -5,7 +5,15 @@ compare two yamls with `ky diff file1 file2`
 
 split a monster yaml into parts with `ky split big-ole.yaml`
 
-# credits
+## install
+
+Releases are posted by [goreleaser](https://goreleaser.com/) to the project [releases page](https://github.com/hornpolish/ky/releases). On Mac, you may prefer brew:
+
+```lang=bash
+brew install hornpolish/brew/ky
+```
+
+## credits
 
 The diff subroutines came from [Sahil Muthoo](https://github.com/sahilm/yamldiff)
 
@@ -15,7 +23,7 @@ Their programming style was harmonized somewhat to mine, and the combined works 
 
 The github actions for golang came from/were inspired by [Bruno Paz](https://dev.to/brpaz/building-a-basic-ci-cd-pipeline-for-a-golang-application-using-github-actions-icj)
 
-# contributing
+## contributing
 
 The KY project welcomes contributions.  
 
@@ -28,7 +36,7 @@ The KY project welcomes contributions.
 
 There is a nice discussion of this [contribution workflow](https://github.com/freeCodeCamp/how-to-contribute-to-open-source/blob/master/CONTRIBUTING.md) on github.
 
-# TODO
+## TODO
 * get the ky version working
 * release a homebrew tap
 * some coverage for main.go
