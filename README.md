@@ -37,7 +37,5 @@ The KY project welcomes contributions.
 There is a nice discussion of this [contribution workflow](https://github.com/freeCodeCamp/how-to-contribute-to-open-source/blob/master/CONTRIBUTING.md) on github.
 
 ## TODO
-* get the ky version working
-* release a homebrew tap
 * some coverage for main.go
 * badges in README?

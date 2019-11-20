@@ -8,6 +8,8 @@ builds:
     - windows
   goarch:
     - amd64
+  ldflags:
+    - -s -w -X github.com/hornpolish/ky/cmd.version={{.Version}} -X github.com/hornpolish/ky/cmd.commit={{.ShortCommit}} -X github.com/hornpolish/ky/cmd.date={{.Date}}
 
 archives:
 - replacements:
@@ -31,7 +33,7 @@ changelog:
 brews:
 - github:
     owner: hornpolish
-    name: brew
+    name: homebrew-brew
   description: A kubernetes yaml swiss army knife. 
   homepage: https://github.com/hornpolish/ky
   test: |
