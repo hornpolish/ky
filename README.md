@@ -36,6 +36,15 @@ The KY project welcomes contributions.
 
 There is a nice discussion of this [contribution workflow](https://github.com/freeCodeCamp/how-to-contribute-to-open-source/blob/master/CONTRIBUTING.md) on github.
 
+
+## Release
+```lang=bash
+vi VERSION
+ver=$(cat VERSION)
+git tag -a $ver -m "announce message"
+git push origin $ver
+```
+
 ## TODO
 * some coverage for main.go
 * badges in README?
