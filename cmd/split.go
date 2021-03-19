@@ -19,7 +19,7 @@ var splitVar struct {
 	outdir string
 	nname  bool
 	ntype  bool
-	nlabel bool
+	nlabel string
 	debug  bool
 }
 
@@ -45,7 +45,7 @@ func init() {
 	splitCmd.Flags().StringVarP(&splitVar.outdir, "outdir", "o", "./split", "Directory to split into")
 	splitCmd.Flags().BoolVarP(&splitVar.nname, "nest-name", "n", false, "Nested Directory per name?")
 	splitCmd.Flags().BoolVarP(&splitVar.ntype, "nest-type", "t", false, "Nested Directory per type?")
-	splitCmd.Flags().BoolVarP(&splitVar.nlabel, "nest-label", "l", false, "Nested Directory per label 'sas.com/admin'?")
+	splitCmd.Flags().StringVarP(&splitVar.nlabel, "nest-label", "l", "sas.com/admin", "Nested Directory per label value")
 	splitCmd.Flags().BoolVarP(&splitVar.debug, "debug", "d", false, "Debug?")
 }
 
@@ -53,19 +53,6 @@ func check(e error) {
 	if e != nil {
 		panic(e)
 	}
-}
-
-// KubernetesAPI is for unmarshaling objects
-type KubernetesAPI struct {
-	APIVersion string `yaml:"apiVersion"`
-	Kind       string `yaml:"kind"`
-	Metadata   struct {
-		Name   string `yaml:"name"`
-		Labels struct {
-			Source string `yaml:"source"`
-			Admin  string `yaml:"sas.com/admin"`
-		} `yaml:"labels"`
-	} `yaml:"metadata"`
 }
 
 // Split takes
@@ -78,33 +65,51 @@ func Split(args []string) error {
 
 	for _, value := range files {
 
-		var m KubernetesAPI
 		var filename string
+		var kind string
+		var name string
+		var filter string
 
-		err := yaml.Unmarshal([]byte(value), &m)
+		result := make(map[interface{}]interface{})
 
-		if err != nil || m.Kind == "" {
+		err := yaml.Unmarshal([]byte(value), &result)
+		if err != nil {
+			panic(err)
+		}
+
+		kind, _ = result["kind"].(string)
+
+		if _, ok := result["metadata"]; ok {
+			metadata := result["metadata"].(map[interface{}]interface{})
+			name, _ = metadata["name"].(string)
+			if _, ok := metadata["labels"]; ok {
+				labels := metadata["labels"].(map[interface{}]interface{})
+				filter, _ = labels[splitVar.nlabel].(string)
+			}
+		}
+
+		if err != nil || kind == "" {
 			fmt.Println("yaml file with no kind")
 			continue
 		}
 
 		if splitVar.nname == true {
-			dirname := path.Join(splitVar.outdir, m.Metadata.Name)
+			dirname := path.Join(splitVar.outdir, name)
 			os.Mkdir(dirname, os.ModePerm)
-			filename = path.Join(dirname, m.Kind+".yaml")
+			filename = path.Join(dirname, kind+".yaml")
 
 		} else if splitVar.ntype == true {
-			dirname := path.Join(splitVar.outdir, m.Kind)
+			dirname := path.Join(splitVar.outdir, kind)
 			os.Mkdir(dirname, os.ModePerm)
-			filename = path.Join(dirname, m.Metadata.Name+".yaml")
+			filename = path.Join(dirname, name+".yaml")
 
-		} else if splitVar.nlabel == true {
-			dirname := path.Join(splitVar.outdir, m.Metadata.Labels.Admin)
+		} else if filter != "" {
+			dirname := path.Join(splitVar.outdir, filter)
 			os.Mkdir(dirname, os.ModePerm)
-			filename = path.Join(dirname, m.Metadata.Name+"-"+m.Kind+".yaml")
+			filename = path.Join(dirname, name+"-"+kind+".yaml")
 
 		} else {
-			filename = path.Join(splitVar.outdir, m.Metadata.Name+"-"+m.Kind+".yaml")
+			filename = path.Join(splitVar.outdir, name+"-"+kind+".yaml")
 		}
 
 		fmt.Println(filename)
