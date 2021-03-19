@@ -19,6 +19,7 @@ var splitVar struct {
 	outdir string
 	nname  bool
 	ntype  bool
+	nlabel bool
 	debug  bool
 }
 
@@ -44,6 +45,7 @@ func init() {
 	splitCmd.Flags().StringVarP(&splitVar.outdir, "outdir", "o", "./split", "Directory to split into")
 	splitCmd.Flags().BoolVarP(&splitVar.nname, "nest-name", "n", false, "Nested Directory per name?")
 	splitCmd.Flags().BoolVarP(&splitVar.ntype, "nest-type", "t", false, "Nested Directory per type?")
+	splitCmd.Flags().BoolVarP(&splitVar.nlabel, "nest-label", "l", false, "Nested Directory per label 'sas.com/admin'?")
 	splitCmd.Flags().BoolVarP(&splitVar.debug, "debug", "d", false, "Debug?")
 }
 
@@ -61,6 +63,7 @@ type KubernetesAPI struct {
 		Name   string `yaml:"name"`
 		Labels struct {
 			Source string `yaml:"source"`
+			Admin  string `yaml:"sas.com/admin"`
 		} `yaml:"labels"`
 	} `yaml:"metadata"`
 }
@@ -94,6 +97,11 @@ func Split(args []string) error {
 			dirname := path.Join(splitVar.outdir, m.Kind)
 			os.Mkdir(dirname, os.ModePerm)
 			filename = path.Join(dirname, m.Metadata.Name+".yaml")
+
+		} else if splitVar.nlabel == true {
+			dirname := path.Join(splitVar.outdir, m.Metadata.Labels.Admin)
+			os.Mkdir(dirname, os.ModePerm)
+			filename = path.Join(dirname, m.Metadata.Name+"-"+m.Kind+".yaml")
 
 		} else {
 			filename = path.Join(splitVar.outdir, m.Metadata.Name+"-"+m.Kind+".yaml")
