@@ -90,6 +90,7 @@ func Split(args []string) error {
 
 		if err != nil || kind == "" {
 			fmt.Println("yaml file with no kind")
+			fmt.Println(value)
 			continue
 		}
 
@@ -155,7 +156,7 @@ func readAndSplitFile(logfile string) map[int]string {
 			log.Panicf("read file line error: %v", err)
 		}
 
-		if strings.TrimSpace(line) == "---" {
+		if strings.HasPrefix(line, "---") {
 			count++
 		} else {
 			c[count] += line
