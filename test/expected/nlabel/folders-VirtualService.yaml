@@ -1,0 +1,22 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/duname: foldersrvc
+    sas.com/version: 2.16.0
+  name: folders
+spec:
+  gateways:
+  - convoy-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /folders
+    - uri:
+        prefix: /folders/
+    route:
+    - destination:
+        host: folders.va40.svc.cluster.local
