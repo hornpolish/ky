@@ -59,6 +59,7 @@ func TestSplitNestLabel(t *testing.T) {
 
 	splitVar.outdir = "../test/output/nlabel"
 	splitVar.nlabel = "helm.sh/chart"
+	splitVar.nname = false
 	arg[0] = "../test/fifo.yaml"
 
 	Split(arg)
@@ -70,6 +71,21 @@ func TestSplitNestLabel(t *testing.T) {
 	compareTwo(t, "nlabel/folders-2.16.0/folders-Deployment.yaml")
 	compareTwo(t, "nlabel/folders-2.16.0/folders-Service.yaml")
 	compareTwo(t, "nlabel/folders-VirtualService.yaml")
+}
+
+func TestSplitLessGreedy(t *testing.T) {
+	arg := make([]string, 2)
+
+	splitVar.outdir = "../test/output/lessGreedySplit"
+	splitVar.nname = false
+	splitVar.nlabel = ""
+	arg[0] = "../test/lessGreedySplit.yaml"
+
+	Split(arg)
+
+	compareTwo(t, "lessGreedySplit/files-Deployment.yaml")
+	compareTwo(t, "lessGreedySplit/postgresql-custom-ConfigMap.yaml")
+	compareTwo(t, "lessGreedySplit/files-Service.yaml")
 }
 
 func TestSplitLarge(t *testing.T) {
