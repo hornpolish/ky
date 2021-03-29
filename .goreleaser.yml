@@ -31,10 +31,11 @@ changelog:
     - '^test:'
 
 brews:
-- github:
-    owner: hornpolish
-    name: homebrew-brew
-  description: A kubernetes yaml swiss army knife. 
+  -
+    tap:
+      owner: hornpolish
+      name: homebrew-brew
+  description: A kubernetes yaml swiss army knife.
   homepage: https://github.com/hornpolish/ky
   test: |
     system "#{bin}/ky version"
