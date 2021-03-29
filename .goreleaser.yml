@@ -35,7 +35,8 @@ brews:
     tap:
       owner: hornpolish
       name: homebrew-brew
-  description: A kubernetes yaml swiss army knife.
-  homepage: https://github.com/hornpolish/ky
-  test: |
-    system "#{bin}/ky version"
+
+    description: A kubernetes yaml swiss army knife.
+    homepage: https://github.com/hornpolish/ky
+    test: |
+      system "#{bin}/ky version"
