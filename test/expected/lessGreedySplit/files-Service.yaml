@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/duname: filesservice
+    sas.com/version: 2.10.1
+  labels:
+    app.kubernetes.io/name: files
+    helm.sh/chart: files-2.10.1
+  name: files
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: files
+  type: ClusterIP

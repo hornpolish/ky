@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/duname: foldersrvc
+    sas.com/version: 2.16.0
+  labels:
+    app.kubernetes.io/name: folders
+    helm.sh/chart: folders-2.16.0
+  name: folders
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: folders
+  type: ClusterIP

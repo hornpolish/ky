@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    sas.com/duname: foldersrvc
+    sas.com/version: 2.16.0
+  labels:
+    app.kubernetes.io/name: folders
+    helm.sh/chart: folders-2.16.0
+  name: folders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: folders
+  template:
+    metadata:
+      labels:
+        app: folders
+        app.kubernetes.io/name: folders
+    spec:
+      containers:
+      - env:
+        - name: SAS_URL_SERVICE_TEMPLATE
+          value: http://va40.itviya-dev0.sas.com
+        envFrom:
+        - configMapRef:
+            name: convoy-shared-config
+        - configMapRef:
+            name: convoy-java-config
+        image: repulpmaster.unx.sas.com/va-125.0.0-x64_redhat_linux_7-docker-testready/sas-folders:2.16.0-20190817.1566004441696
+        imagePullPolicy: IfNotPresent
+        name: folders
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: convoy-shared-config
+        image: docker.sas.com/dapage/init-blocker:1.6
+        name: init-blocker

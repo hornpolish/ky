@@ -1,0 +1,99 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    sas.com/duname: filesservice
+    sas.com/version: 2.10.1
+  labels:
+    app.kubernetes.io/name: files
+    helm.sh/chart: files-2.10.1
+  name: files
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: files
+  template:
+    metadata:
+      labels:
+        app: files
+        app.kubernetes.io/name: files
+    spec:
+      containers:
+      - env:
+        - name: SAS_URL_SERVICE_TEMPLATE
+          value: http://va40.itviya-dev0.sas.com
+        envFrom:
+        - configMapRef:
+            name: convoy-shared-config
+        - configMapRef:
+            name: convoy-java-config
+        image: repulpmaster.unx.sas.com/va-125.0.0-x64_redhat_linux_7-docker-testready/sas-files:2.10.1-20190817.1566003978971
+        imagePullPolicy: IfNotPresent
+        name: files
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources: {}
+      initContainers:
+      - envFrom:
+        - configMapRef:
+            name: convoy-shared-config
+        image: docker.sas.com/dapage/init-blocker:1.6
+        name: init-blocker
+---
+apiVersion: v1
+data:
+  postgres-ha.yaml: |2
+
+    ---
+    bootstrap:
+      dcs:
+        loop_wait: 10                                      # Added through SAS provided kustomize configMapGenerator
+        ttl: 30                                            # Added through SAS provided kustomize configMapGenerator
+        master_start_timeout: 0                            # Added through SAS provided kustomize configMapGenerator
+        postgresql:
+          parameters:
+            archive_timeout: 60                            # Added through SAS provided kustomize configMapGenerator
+    postgresql:
+      pg_hba:
+        - local all postgres peer
+        - local all all trust
+        - local all crunchyadm peer
+        - hostssl replication primaryuser 0.0.0.0/0 scram-sha-256
+        - hostssl all all 127.0.0.1/32 scram-sha-256
+        - hostssl all all 0.0.0.0/0 scram-sha-256
+kind: ConfigMap
+metadata:
+  annotations:
+    sas.com/component-name: sas-crunchy-data-postgres-operator
+    sas.com/component-version: 20.7.2-20210212.1613150000258
+    sas.com/tls-enabled-ports: all
+    sas.com/version: 20.7.2
+  labels:
+    sas.com/admin: cluster-local
+    sas.com/deployment: sas-viya
+  name: postgresql-custom
+  namespace: viya-vdsd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/duname: filesservice
+    sas.com/version: 2.10.1
+  labels:
+    app.kubernetes.io/name: files
+    helm.sh/chart: files-2.10.1
+  name: files
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: files
+  type: ClusterIP
